@@ -49,3 +49,5 @@ node_modules/
 *.class
 *.jar
 *.war
+
+*.md
