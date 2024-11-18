@@ -12,7 +12,7 @@ jobs:
       contents: read
     # 수행하고자 하는 처리 단계 명시
     steps:
-    #리포지토리의 코드를 현재 작업 환경(워크플로 러너)으로 가져오는 작업
+    # 리포지토리의 코드를 현재 작업 환경(워크플로 러너)으로 가져오는 작업
     - uses: actions/checkout@v4 
     # JDK 17 설정
     - name: Set up JDK 17 
@@ -32,23 +32,13 @@ jobs:
     # Gradle 설정
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4.0.0
-    # Gradle 캐시 설정
-    - name: Cache Gradle packages
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle
     # gradlew 실행 권한 부여
     - name: Grant execute permission for gradlew
       run: chmod u+x gradlew
     # Gradle 빌드 실행
     - name: Build with Gradle Wrapper
-      run: ./gradlew clean build --no-daemon
-   # Docker 그룹에 사용자 추가 및 Docker 재시작
+      run: ./gradlew clean build --no-daemon --console=plain
+    # Docker 그룹에 사용자 추가 및 Docker 재시작
     - name: Add ubuntu user to Docker group and restart Docker on EC2
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_IP }} << 'EOF'
@@ -60,7 +50,6 @@ jobs:
     - name: Verify Docker permissions on EC2
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_IP }} "docker ps"
-
     # EC2에서 Docker Compose 실행
     - name: SSH into EC2 and run Docker Compose
       run: |
