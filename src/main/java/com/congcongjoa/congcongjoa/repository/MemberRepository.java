@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.congcongjoa.congcongjoa.entity.Member;
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.repository.custom.MemberRepositoryCustom;
 
 @Repository
