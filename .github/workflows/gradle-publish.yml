@@ -54,7 +54,7 @@ jobs:
     - name: SSH into EC2 and run Docker Compose
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_IP }} << 'EOF'
-          cd /home/ubuntu/OmaStay
+          cd /home/ubuntu/congcongjoacafe-backend
           docker-compose down
           docker-compose up -d --build
         EOF
