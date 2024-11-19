@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.OrderStatus;
+import com.congcongjoa.congcongjoa.enums.OrderStatus;
 
 @Data
 public class OrderDTO {

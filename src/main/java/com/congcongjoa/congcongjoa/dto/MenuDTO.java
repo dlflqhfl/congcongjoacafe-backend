@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
-import com.congcongjoa.congcongjoa.entity.enumurate.MenuCate;
-import com.congcongjoa.congcongjoa.entity.enumurate.Size;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.MenuCate;
+import com.congcongjoa.congcongjoa.enums.Size;
 
 @Data
 public class MenuDTO {
