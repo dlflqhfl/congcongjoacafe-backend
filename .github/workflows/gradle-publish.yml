@@ -50,6 +50,19 @@ jobs:
     - name: Verify Docker permissions on EC2
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_IP }} "docker ps"
+    # Docker-compose 설치
+    - name: Install docker-compose on EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_IP }} << 'EOF'
+          if ! command -v docker-compose &> /dev/null || [ "$(docker-compose --version 2>&1 | grep -c 'command not found')" -ne 0 ]; then
+            sudo rm -f /usr/local/bin/docker-compose
+            sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+          fi
+          exit
+        EOF
+
     # EC2에서 Docker Compose 실행
     - name: SSH into EC2 and run Docker Compose
       run: |
