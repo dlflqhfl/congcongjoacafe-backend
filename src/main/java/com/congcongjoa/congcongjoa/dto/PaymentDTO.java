@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.PaymentMethod;
+import com.congcongjoa.congcongjoa.enums.PaymentMethod;
 
 @Data
 public class PaymentDTO {

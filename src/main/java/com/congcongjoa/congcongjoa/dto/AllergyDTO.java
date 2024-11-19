@@ -1,6 +1,6 @@
 package com.congcongjoa.congcongjoa.dto;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 
 import lombok.Data;
 

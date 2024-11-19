@@ -2,7 +2,7 @@ package com.congcongjoa.congcongjoa.dto;
 
 import lombok.Data;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 
 @Data
 public class ImageDTO {

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 
 @Data
 public class StoreMenuDTO {

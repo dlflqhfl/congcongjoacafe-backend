@@ -2,7 +2,7 @@ package com.congcongjoa.congcongjoa.entity;
 
 import java.time.LocalDateTime;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.vo.StartEndVo;
 
 import jakarta.persistence.AttributeOverride;
