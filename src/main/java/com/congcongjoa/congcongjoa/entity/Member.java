@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
-import com.congcongjoa.congcongjoa.entity.enumurate.MemberAuth;
-import com.congcongjoa.congcongjoa.entity.enumurate.Social;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.MemberAuth;
+import com.congcongjoa.congcongjoa.enums.Social;
 import com.congcongjoa.congcongjoa.vo.AddressVo;
 
 import jakarta.persistence.AttributeOverride;
