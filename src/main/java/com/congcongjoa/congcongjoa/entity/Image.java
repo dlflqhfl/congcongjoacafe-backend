@@ -1,6 +1,6 @@
 package com.congcongjoa.congcongjoa.entity;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

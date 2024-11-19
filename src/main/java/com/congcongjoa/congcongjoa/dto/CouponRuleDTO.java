@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.CpCate;
-import com.congcongjoa.congcongjoa.entity.enumurate.CpMethod;
+import com.congcongjoa.congcongjoa.enums.CpCate;
+import com.congcongjoa.congcongjoa.enums.CpMethod;
 
 @Data
 public class CouponRuleDTO {

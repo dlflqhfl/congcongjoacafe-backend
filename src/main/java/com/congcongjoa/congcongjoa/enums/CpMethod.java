@@ -1,4 +1,4 @@
-package com.congcongjoa.congcongjoa.entity.enumurate;
+package com.congcongjoa.congcongjoa.enums;
 
 public enum CpMethod {
     DESIGNATED, //지정발행
