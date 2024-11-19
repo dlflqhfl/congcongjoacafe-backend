@@ -47,7 +47,7 @@ node_modules/
 
 ### Compiled Files ###
 *.class
-#*.jar
+*.jar
 *.war
 
 *.md
