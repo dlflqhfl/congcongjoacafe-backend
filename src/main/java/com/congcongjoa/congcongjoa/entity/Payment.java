@@ -2,7 +2,7 @@ package com.congcongjoa.congcongjoa.entity;
 
 import java.time.LocalDateTime;
 
-import com.congcongjoa.congcongjoa.entity.enumurate.PaymentMethod;
+import com.congcongjoa.congcongjoa.enums.PaymentMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
