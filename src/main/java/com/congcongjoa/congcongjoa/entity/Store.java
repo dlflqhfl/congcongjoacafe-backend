@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.vo.AddressVo;
 import com.congcongjoa.congcongjoa.vo.StartEndVo;
 
@@ -75,7 +76,7 @@ public class Store {
 
     //0: 매장이용 1: 포장만 가능
     @Enumerated(EnumType.STRING)
-    @Column(name = "to_go", nullable = false)
+    @Column(name = "to_go")
     private BooleanStatus toGo;
 
     @Column(name = "ceo", length = 100)
@@ -83,14 +84,14 @@ public class Store {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "start", column = @Column(name = "s_start", nullable = false)),
-            @AttributeOverride(name = "end", column = @Column(name = "s_end", nullable = false))
+            @AttributeOverride(name = "start", column = @Column(name = "s_start")),
+            @AttributeOverride(name = "end", column = @Column(name = "s_end"))
     })
     private StartEndVo sStartEnd;
 
     //0: 주차가능 1: 주차불가
     @Enumerated(EnumType.STRING)
-    @Column(name = "s_park", nullable = false)
+    @Column(name = "s_park")
     private BooleanStatus sPark;
 
     @Column(name = "directions", length = 200)
@@ -98,8 +99,8 @@ public class Store {
 
     //0: 운영 1: 폐점
     @Enumerated(EnumType.STRING)
-    @Column(name = "s_status", nullable = false)
-    private BooleanStatus sStatus;
+    @Column(name = "s_status")
+    private StoreStatus sStatus;
 
     @Column(name = "s_none", length = 200)
     private String sNone;

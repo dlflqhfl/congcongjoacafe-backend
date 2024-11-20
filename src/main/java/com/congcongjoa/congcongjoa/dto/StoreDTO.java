@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.vo.AddressVo;
 import com.congcongjoa.congcongjoa.vo.StartEndVo;
 
@@ -28,7 +29,7 @@ public class StoreDTO {
     private StartEndVo sStartEnd;
     private BooleanStatus sPark;
     private String directions;
-    private BooleanStatus sStatus;
+    private StoreStatus sStatus;
     private String sNone;
     private List<StoreMenuDTO> storeMenus = new ArrayList<>();
     private List<ImageDTO> images = new ArrayList<>();
