@@ -13,5 +13,7 @@ public interface StoreRepository extends JpaRepository<Store, Long>, StoreReposi
     Store findAllBySNameAndSCode(@Param("sName") String sName, @Param("sCode") String sCode);
 
 
-    Store findBySCode(String sCode);
+    Store findBysCode(String sCode);
+
+    Store findBysName(String sName);
 }
