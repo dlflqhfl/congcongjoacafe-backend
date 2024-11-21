@@ -3,8 +3,10 @@ package com.congcongjoa.congcongjoa.RsData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
+import lombok.Data;
 
 @AllArgsConstructor
+@Data
 public class RsData<T> {
     private String resultCode;
     private String msg;
