@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @Table(name = "menu")
-@ToString(exclude = {"allergies", "nutritions", "menuOptions", "storeMenus", "images"})
+@ToString(exclude = {"allergy", "nutrition", "menuOption", "storeMenu", "images"})
 public class Menu {
 
     @Id
@@ -60,17 +61,17 @@ public class Menu {
     @Column(name = "mn_none", length = 200)
     private String mnNone;
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<Allergy> allergies = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private Allergy allergy;
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<Nutrition> nutritions = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private Nutrition nutrition;
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<MenuOption> menuOptions = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private MenuOption menuOption;
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<StoreMenu> storeMenus = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private StoreMenu storeMenu;
 
     @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
