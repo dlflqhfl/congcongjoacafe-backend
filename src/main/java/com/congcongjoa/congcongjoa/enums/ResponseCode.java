@@ -29,25 +29,25 @@ public enum ResponseCode {
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, false, "인증되지 않은 사용자입니다."),
-    
+
     // 403 Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, false, "권한이 없습니다."),
-    
+
     // 404 Not Found
     NOT_FOUND(HttpStatus.NOT_FOUND, false, "리소스를 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "사용자를 찾을 수 없습니다."),
-    
+
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, false, "허용되지 않은 메소드입니다."),
-    
+
     // 409 Conflict
     CONFLICT(HttpStatus.CONFLICT, false, "충돌이 발생했습니다."),
     USER_ALREADY_EXIST(HttpStatus.CONFLICT, false, "이미 가입된 사용자입니다."),
     USER_NAME_ALREADY_EXIST(HttpStatus.CONFLICT, false, "이미 존재하는 닉네임입니다."),
-    
+
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버에 오류가 발생했습니다."),
-    
+
     // 503 Service Unavailable
     SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, false, "서비스를 사용할 수 없습니다.")
     ;

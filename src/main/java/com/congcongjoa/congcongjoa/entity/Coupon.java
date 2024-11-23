@@ -22,17 +22,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "coupon")
-@ToString(exclude = {"userCoupons"})
+@ToString(exclude = {"userCoupons", "couponRule"})
 public class Coupon {
 
     @Id

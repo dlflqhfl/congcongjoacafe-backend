@@ -1,5 +1,6 @@
 package com.congcongjoa.congcongjoa.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.vo.AddressVo;
 import com.congcongjoa.congcongjoa.vo.StartEndVo;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class StoreDTO {
 
     private Long id;
@@ -34,4 +37,8 @@ public class StoreDTO {
     private List<StoreMenuDTO> storeMenus = new ArrayList<>();
     private List<ImageDTO> images = new ArrayList<>();
 
+    @QueryProjection
+    public StoreDTO(String sName) {
+        this.sName = sName;
+    }
 }
