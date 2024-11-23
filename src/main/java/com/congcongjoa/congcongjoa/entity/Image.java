@@ -11,17 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
-@Getter
+@NoArgsConstructor@Getter
 @Setter
 @Entity
 @Table(name = "image")
-@ToString
+@ToString(exclude = {"store", "menu"})
 public class Image {
 
     @Id

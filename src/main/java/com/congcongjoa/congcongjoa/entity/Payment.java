@@ -15,17 +15,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "payment")
-@ToString
+@ToString(exclude = {"order", "member"})
 public class Payment {
 
     @Id

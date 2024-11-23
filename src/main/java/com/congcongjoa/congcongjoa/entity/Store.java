@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.vo.AddressVo;
 import com.congcongjoa.congcongjoa.vo.StartEndVo;
 
@@ -20,14 +21,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "store")
 @ToString(exclude = {"storeMenus", "images"})
@@ -75,7 +74,7 @@ public class Store {
 
     //0: 매장이용 1: 포장만 가능
     @Enumerated(EnumType.STRING)
-    @Column(name = "to_go", nullable = false)
+    @Column(name = "to_go")
     private BooleanStatus toGo;
 
     @Column(name = "ceo", length = 100)
@@ -83,14 +82,14 @@ public class Store {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "start", column = @Column(name = "s_start", nullable = false)),
-            @AttributeOverride(name = "end", column = @Column(name = "s_end", nullable = false))
+            @AttributeOverride(name = "start", column = @Column(name = "s_start")),
+            @AttributeOverride(name = "end", column = @Column(name = "s_end"))
     })
     private StartEndVo sStartEnd;
 
     //0: 주차가능 1: 주차불가
     @Enumerated(EnumType.STRING)
-    @Column(name = "s_park", nullable = false)
+    @Column(name = "s_park")
     private BooleanStatus sPark;
 
     @Column(name = "directions", length = 200)
@@ -98,16 +97,26 @@ public class Store {
 
     //0: 운영 1: 폐점
     @Enumerated(EnumType.STRING)
-    @Column(name = "s_status", nullable = false)
-    private BooleanStatus sStatus;
+    @Column(name = "s_status")
+    private StoreStatus sStatus;
 
     @Column(name = "s_none", length = 200)
     private String sNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<StoreMenu> storeMenus = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
-}   
+    public void updateTokens(String accessToken, String refreshToken) {
+        if (accessToken == null || refreshToken == null) {
+            throw new IllegalArgumentException("엑세스 토큰, 리프레시 토큰 값이 null입니다");
+        }
+        this.sAccessToken = accessToken;
+        this.sRefreshToken = refreshToken;
+    }
+
+}

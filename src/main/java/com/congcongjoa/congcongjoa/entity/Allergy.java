@@ -13,10 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 
 @NoArgsConstructor
@@ -24,7 +21,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @Table(name = "allergy")
-@ToString
+@ToString(exclude = {"menu"})
 public class Allergy {
 
     @Id

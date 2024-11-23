@@ -25,5 +25,4 @@ public interface StoreMapper {
     List<StoreDTO> toStoreDTOList(List<Store> storeList);
 
     List<Store> toStoreList(List<StoreDTO> storeDTOList);
-    
 }
