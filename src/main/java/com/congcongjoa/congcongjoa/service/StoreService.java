@@ -1,13 +1,15 @@
 package com.congcongjoa.congcongjoa.service;
 
+import com.congcongjoa.congcongjoa.dto.StoreDTO;
+import com.congcongjoa.congcongjoa.entity.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
-import com.congcongjoa.congcongjoa.entity.Store;
-import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
+
+import java.util.List;
+
 
 @Service
 public class StoreService {
@@ -35,16 +37,17 @@ public class StoreService {
         }
     }
 
-    public boolean regStore(RegStoreDTO regStoreDTO){
+    public boolean regStore(RegStoreDTO regStoreDTO) {
         try {
 
-            Store store = new Store();
-            
-            store.setSCode(regStoreDTO.getStoreCode());
-            store.setSName(regStoreDTO.getName());
-            store.setSPw(regStoreDTO.getInitialPassword());
-            store.setSStatus(StoreStatus.REGISTERED);
-    
+            Store store = Store.builder()
+                    .sCode(regStoreDTO.getStoreCode())
+                    .sName(regStoreDTO.getName())
+                    .sPw(regStoreDTO.getInitialPassword())
+                    .sStatus(StoreStatus.REGISTERED)
+                    .build();
+
+
             storeRepository.save(store);
 
             return true;
@@ -56,5 +59,12 @@ public class StoreService {
         }
 
     }
-    
+
+    // 모든 매장의 키값과 이름을 가져온다
+    public List<StoreDTO> findIdAndSName() {
+
+        return storeRepository.findSName();
+    }
+
+
 }
