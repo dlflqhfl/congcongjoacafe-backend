@@ -9,7 +9,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@Data
 public class RsData<T> {
     private String resultCode;
     private String msg;

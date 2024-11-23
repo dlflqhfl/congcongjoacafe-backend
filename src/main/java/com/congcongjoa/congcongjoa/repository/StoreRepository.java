@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface StoreRepository extends JpaRepository<Store, Long>, StoreRepositoryCustom {
     @Query("SELECT s FROM Store s WHERE s.sName = :sName AND s.sCode = :sCode")
-    Store findAllBySNameAndSCode(@Param("sName") String sName, @Param("sCode") String sCode);
+    Store findBySNameAndSCode(@Param("sName") String sName, @Param("sCode") String sCode);
 
 
     Store findBysCode(String sCode);
