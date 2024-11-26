@@ -14,5 +14,12 @@ public class OwnerController {
     @Autowired
     private StoreService storeService;
 
+    @RequestMapping("/getStoreName")
+    public String getStoreName(){
+        System.out.println("getStoreName");
+
+        return null;
+    }
+
 
 }
