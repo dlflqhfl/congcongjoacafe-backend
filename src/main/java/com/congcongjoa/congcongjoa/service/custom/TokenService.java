@@ -37,24 +37,15 @@ public class TokenService {
     public void saveOwnerToken(String sCode, String accessToken, String refreshToken, Authentication authentication) {
         Store store = storeRepository.findBysCode(sCode);
 
-        // 로그 출력 추가
-        System.out.println("Store 상태: " + store.getSStatus());
-
         // Store 상태를 확인하여 isFirstLogin 값 설정
         boolean isFirstLogin = store.getSStatus() == StoreStatus.REGISTERED;
-
-        // 로그 출력 추가
-        System.out.println("isFirstLogin 값: " + isFirstLogin);
-
+        
         store.updateTokens(accessToken, refreshToken);
         storeRepository.save(store);
 
         // CustomOwnerDetails에 isFirstLogin 값 설정
         CustomOwnerDetails customOwnerDetails = (CustomOwnerDetails) authentication.getPrincipal();
         customOwnerDetails.setFirstLogin(isFirstLogin);
-
-        // 로그 출력 추가
-        System.out.println("CustomOwnerDetails isFirstLogin 값: " + customOwnerDetails.isFirstLogin());
     }
 
     private boolean isPasswordValid(Store store, String password) {
