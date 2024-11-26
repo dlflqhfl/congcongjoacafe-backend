@@ -22,12 +22,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,7 +30,7 @@ import lombok.ToString;
 @Getter
 @Entity
 @Table(name = "coupon")
-@ToString(exclude = {"userCoupons"})
+@ToString(exclude = {"userCoupons", "couponRule"})
 public class Coupon {
 
     @Id

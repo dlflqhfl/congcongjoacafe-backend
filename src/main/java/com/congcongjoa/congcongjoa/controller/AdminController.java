@@ -16,7 +16,6 @@ import com.congcongjoa.congcongjoa.dto.MenuDTO;
 import com.congcongjoa.congcongjoa.dto.NutritionDTO;
 import com.congcongjoa.congcongjoa.dto.OptionDTO;
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
-import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
 import com.congcongjoa.congcongjoa.service.MenuService;

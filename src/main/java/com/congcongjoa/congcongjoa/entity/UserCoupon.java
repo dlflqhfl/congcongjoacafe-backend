@@ -32,7 +32,7 @@ import lombok.ToString;
 @Getter
 @Entity
 @Table(name = "user_coupon")
-@ToString
+@ToString(exclude = {"coupon", "member"})
 public class UserCoupon {
 
     @Id
