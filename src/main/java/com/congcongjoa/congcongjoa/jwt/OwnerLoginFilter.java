@@ -3,6 +3,7 @@ import com.congcongjoa.congcongjoa.dto.custom.CustomOwnerDetails;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.custom.TokenService;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -60,10 +61,6 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         CustomOwnerDetails customOwnerDetails = (CustomOwnerDetails) authentication.getPrincipal();
         String sCode = customOwnerDetails.getUsername();
-        boolean isFirstLogin = customOwnerDetails.isFirstLogin();
-
-        // 로그 출력 추가
-        System.out.println("CustomOwnerDetails isFirstLogin 값 (successfulAuthentication): " + isFirstLogin);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -75,12 +72,8 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         tokenData.put("sCode", sCode);
         tokenData.put("role", role);
 
-        // 첫 로그인일 경우에만 추가
-        if (isFirstLogin) {
-            tokenData.put("isFirstLogin", true);
-        }
-
-        String accessToken = jwtProvider.getAccesToken(tokenData);
+        // JWT 토큰 생성
+        String accessToken = jwtProvider.getAccessToken(tokenData);
         String refreshToken = jwtProvider.getRefreshToken(tokenData);
 
         tokenService.saveOwnerToken(sCode, accessToken, refreshToken, authentication);
@@ -88,18 +81,19 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         // 응답 설정
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
-        response.addHeader("Authorization", "Bearer " + accessToken);
-        response.addHeader("refreshToken", refreshToken);
+
+        // Secure, HttpOnly 쿠키에 refreshToken 저장
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(false);  // 개발 후 https 보안이 적용되면 true로 변경
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(24 * 60 * 60);
+        response.addCookie(refreshTokenCookie);
 
         // ResponseCode 사용하여 RsData 객체 생성 및 JSON 응답 작성
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("accessToken", accessToken);
-        responseData.put("refreshToken", refreshToken);
-        responseData.put("isFirstLogin", isFirstLogin);
-
-
-        // 로그 출력 추가
-        System.out.println("Response Data: " + responseData);
+        responseData.put("isFirstLogin", customOwnerDetails.isFirstLogin());
+        responseData.put("accessToken", accessToken);  // accessToken 포함
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(ResponseCode.USER_LOGIN_SUCCESS.toRsData(responseData));
@@ -107,23 +101,7 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.getWriter().write(jsonResponse);
     }
 
-    private static Map<String, Object> getStringObjectMap(Authentication authentication, String sCode, boolean isFirstLogin) {
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
 
-        // 토큰 생성 시 필요한 매핑 정보를 설정
-        Map<String, Object> tokenData = new HashMap<>();
-        tokenData.put("sCode", sCode);
-        tokenData.put("role", role);
-
-        // 첫 로그인일 경우에만 추가
-        if (isFirstLogin) {
-            tokenData.put("isFirstLogin", true);
-        }
-        return tokenData;
-    }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException {

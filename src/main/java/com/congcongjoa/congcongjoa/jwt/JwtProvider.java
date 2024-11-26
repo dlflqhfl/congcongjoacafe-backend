@@ -62,7 +62,7 @@ public class JwtProvider {
 
 
     //엑세스 코드 발급
-    public String getAccesToken(Map<String, Object> map){
+    public String getAccessToken(Map<String, Object> map){
         return genToken(map, ACCESS_TOKEN_VALIDITY);
     }
 
