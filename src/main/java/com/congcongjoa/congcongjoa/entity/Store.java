@@ -21,14 +21,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "store")
 @ToString(exclude = {"storeMenus", "images"})
@@ -105,10 +108,20 @@ public class Store {
     @Column(name = "s_none", length = 200)
     private String sNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<StoreMenu> storeMenus = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
+
+    public void updateTokens(String accessToken, String refreshToken) {
+        if (accessToken == null || refreshToken == null) {
+            throw new IllegalArgumentException("엑세스 토큰, 리프레시 토큰 값이 null입니다");
+        }
+        this.sAccessToken = accessToken;
+        this.sRefreshToken = refreshToken;
+    }
 
 }   

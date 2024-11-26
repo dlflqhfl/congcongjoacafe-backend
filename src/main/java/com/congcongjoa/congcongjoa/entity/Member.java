@@ -24,14 +24,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "member")
 @ToString(exclude = {"payments", "userCoupons", "orders", "stamps"})
@@ -100,15 +103,19 @@ public class Member {
     @Column(name = "m_none", length = 200)
     private String mNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member" , fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member" , fetch = FetchType.LAZY)
     private List<UserCoupon> userCoupons = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member" , fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member" , fetch = FetchType.LAZY)
     private List<Stamp> stamps = new ArrayList<>();
     

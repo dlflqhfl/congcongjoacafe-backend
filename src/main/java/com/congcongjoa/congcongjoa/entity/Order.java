@@ -18,14 +18,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "order")
 @ToString(exclude = {"orderDetails", "payments"})
@@ -50,9 +53,11 @@ public class Order {
     @Column(name = "or_none", length = 200)
     private String orNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order" , fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "order" , fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 

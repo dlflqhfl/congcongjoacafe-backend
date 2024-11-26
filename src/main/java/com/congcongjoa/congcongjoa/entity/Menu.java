@@ -18,14 +18,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import lombok.ToString;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "menu")
 @ToString(exclude = {"allergy", "nutrition", "menuOption", "storeMenu", "images"})
@@ -73,6 +77,7 @@ public class Menu {
     @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
     private StoreMenu storeMenu;
 
+    @Builder.Default
     @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
     

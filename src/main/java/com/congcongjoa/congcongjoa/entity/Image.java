@@ -4,6 +4,8 @@ import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,14 +13,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "image")
 @ToString
@@ -43,6 +48,10 @@ public class Image {
 
     @Column(name = "i_name", nullable = false, length = 200)
     private String iName;
+
+    //0 메인 1 노메인 
+    @Column(name = "i_main", nullable = false)
+    private BooleanStatus iMain;
 
     //0 등록 / 1 삭제
     @Column(name = "i_status", nullable = false)

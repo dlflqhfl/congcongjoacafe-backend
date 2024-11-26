@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
 import com.congcongjoa.congcongjoa.entity.Store;
-import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
 
@@ -37,13 +36,13 @@ public class StoreService {
 
     public boolean regStore(RegStoreDTO regStoreDTO){
         try {
-
-            Store store = new Store();
             
-            store.setSCode(regStoreDTO.getStoreCode());
-            store.setSName(regStoreDTO.getName());
-            store.setSPw(regStoreDTO.getInitialPassword());
-            store.setSStatus(StoreStatus.REGISTERED);
+            Store store = Store.builder()
+                .sCode(regStoreDTO.getStoreCode())
+                .sName(regStoreDTO.getName())
+                .sPw(regStoreDTO.getInitialPassword())
+                .sStatus(StoreStatus.REGISTERED)
+                .build();
     
             storeRepository.save(store);
 
