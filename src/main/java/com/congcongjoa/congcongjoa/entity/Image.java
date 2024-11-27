@@ -13,7 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor@Getter
+@NoArgsConstructor
+@Getter
 @Setter
 @Entity
 @Table(name = "image")
