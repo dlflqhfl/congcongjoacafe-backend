@@ -20,10 +20,10 @@ public class MenuDTO {
     private Long mnPrice;
     private BooleanStatus mnStatus;
     private String mnNone;
-    private List<AllergyDTO> allergies = new ArrayList<>();
-    private List<NutritionDTO> nutritions = new ArrayList<>();
-    private List<MenuOptionDTO> menuOptions = new ArrayList<>();
-    private List<StoreMenuDTO> storeMenus = new ArrayList<>();
+    private AllergyDTO allergy;
+    private NutritionDTO nutrition;
+    private MenuOptionDTO menuOption;
+    private StoreMenuDTO storeMenu;
     private List<ImageDTO> images = new ArrayList<>();
 
 }

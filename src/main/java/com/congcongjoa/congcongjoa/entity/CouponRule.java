@@ -18,8 +18,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor@Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Getter
 @Entity
 @Table(name = "coupon_rule")
 @ToString(exclude = {"coupons"})
@@ -51,6 +53,7 @@ public class CouponRule {
     @Column(name = "cr_none", length = 200)
     private String crNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "couponRule" , fetch = FetchType.LAZY)
     private List<Coupon> coupons = new ArrayList<>();
     
