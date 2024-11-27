@@ -2,6 +2,7 @@ package com.congcongjoa.congcongjoa.controller;
 
 
 import com.congcongjoa.congcongjoa.service.StoreService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,12 +15,6 @@ public class OwnerController {
     @Autowired
     private StoreService storeService;
 
-    @RequestMapping("/getStoreName")
-    public String getStoreName(){
-        System.out.println("getStoreName");
-
-        return null;
-    }
 
 
 }

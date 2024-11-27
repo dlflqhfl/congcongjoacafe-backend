@@ -76,21 +76,22 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtProvider.getAccessToken(tokenData);
         String refreshToken = jwtProvider.getRefreshToken(tokenData);
 
-        tokenService.saveOwnerToken(sCode, accessToken, refreshToken, authentication);
-
         // 응답 설정
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
 
-        // Secure, HttpOnly 쿠키에 refreshToken 저장
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        // Secure, HttpOnly 쿠키에 refreshAccessToken 저장
+        Cookie refreshTokenCookie = new Cookie("refreshAccessToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
+
         refreshTokenCookie.setSecure(false);  // 개발 후 https 보안이 적용되면 true로 변경
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(24 * 60 * 60);
         response.addCookie(refreshTokenCookie);
 
-        // ResponseCode 사용하여 RsData 객체 생성 및 JSON 응답 작성
+        tokenService.saveOwnerToken(sCode, refreshToken, authentication);
+
+        //ResponseCode 사용하여 RsData 객체 생성 및 JSON 응답 작성
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("isFirstLogin", customOwnerDetails.isFirstLogin());
         responseData.put("accessToken", accessToken);  // accessToken 포함
