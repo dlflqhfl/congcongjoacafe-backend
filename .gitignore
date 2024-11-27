@@ -41,6 +41,7 @@ node_modules/
 
 ### Environment Variables ###
 .env
+application-secret.yml
 
 ### Logs ###
 *.log

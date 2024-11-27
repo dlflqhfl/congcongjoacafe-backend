@@ -13,8 +13,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor@Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Getter
 @Entity
 @Table(name = "grade")
 @ToString(exclude = {"members"})
@@ -34,6 +36,7 @@ public class Grade {
     @Column(name = "g_none", length = 200)
     private String gNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "grade" , fetch = FetchType.LAZY)
     private List<Member> members = new ArrayList<>();
     

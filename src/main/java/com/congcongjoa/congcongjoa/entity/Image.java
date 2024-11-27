@@ -13,8 +13,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor@Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Getter
 @Entity
 @Table(name = "image")
 @ToString(exclude = {"store", "menu"})
@@ -39,6 +41,10 @@ public class Image {
 
     @Column(name = "i_name", nullable = false, length = 200)
     private String iName;
+
+    //0 메인 1 노메인 
+    @Column(name = "i_main", nullable = false)
+    private BooleanStatus iMain;
 
     //0 등록 / 1 삭제
     @Column(name = "i_status", nullable = false)
