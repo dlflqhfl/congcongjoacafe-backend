@@ -6,6 +6,7 @@ import java.util.List;
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.MenuCate;
 import com.congcongjoa.congcongjoa.enums.Size;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,8 +66,9 @@ public class Menu {
     @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
     private Nutrition nutrition;
 
-    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private MenuOption menuOption;
+    @Builder.Default
+    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private List<MenuOption> menuOption  = new ArrayList<>();
 
     @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
     private StoreMenu storeMenu;

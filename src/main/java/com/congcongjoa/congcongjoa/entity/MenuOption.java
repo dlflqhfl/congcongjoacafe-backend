@@ -3,6 +3,9 @@ package com.congcongjoa.congcongjoa.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +25,7 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "menu_option")
-@ToString(exclude = {"detailOptions", "menu", "option"})
+@ToString(exclude = {"detailOptions"})
 public class MenuOption {
 
     @Id
@@ -30,7 +33,7 @@ public class MenuOption {
     @Column(name = "mo_idx", nullable = false)
     private Long id;
     
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mn_idx", referencedColumnName = "mn_idx")
     private Menu menu;
 
