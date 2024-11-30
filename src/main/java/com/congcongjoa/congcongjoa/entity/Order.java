@@ -25,7 +25,7 @@ import lombok.*;
 @Builder
 @Getter
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @ToString(exclude = {"orderDetails", "payments", "member"})
 public class Order {
     
