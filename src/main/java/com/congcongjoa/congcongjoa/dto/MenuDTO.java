@@ -22,7 +22,7 @@ public class MenuDTO {
     private String mnNone;
     private AllergyDTO allergy;
     private NutritionDTO nutrition;
-    private MenuOptionDTO menuOption;
+    private List<MenuOptionDTO> menuOption = new ArrayList<>();
     private StoreMenuDTO storeMenu;
     private List<ImageDTO> images = new ArrayList<>();
 

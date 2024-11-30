@@ -1,12 +1,15 @@
 package com.congcongjoa.congcongjoa.service;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.congcongjoa.congcongjoa.dto.OptionDTO;
 import com.congcongjoa.congcongjoa.entity.Option;
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.mapper.OptionMapper;
 import com.congcongjoa.congcongjoa.repository.OptionRepository;
 
 @Service
@@ -35,4 +38,9 @@ public class OptionService {
 
     }
     
+    public List<OptionDTO> getAllOption() {
+
+        return OptionMapper.INSTANCE.toOptionDTOList(optionRepository.findOptionAll());
+    }
+
 }
