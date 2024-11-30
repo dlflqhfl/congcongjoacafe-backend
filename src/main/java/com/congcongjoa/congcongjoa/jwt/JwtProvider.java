@@ -17,14 +17,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProvider {
 
-
-
     @Getter
     private final SecretKey secretKey;
 
     @Value("${custom.jwt.secretKey}") String secretKeyCode;
 
-    private static final int ACCESS_TOKEN_VALIDITY = 3600;      // 1시간
+    private static final int ACCESS_TOKEN_VALIDITY = 60 * 60;      // 1시간
     private static final int REFRESH_TOKEN_VALIDITY = 60 * 60 * 24 * 14; // 14일
 
     public JwtProvider(@Value("${custom.jwt.secretKey}") String secretKeyCode) {
@@ -44,7 +42,7 @@ public class JwtProvider {
         Date accessTokenExpiresIn = new Date(now + 1000L * seconds);
 
         JwtBuilder jwtBuilder = Jwts.builder()
-                .subject("role")
+                .subject("user")
                 .expiration(accessTokenExpiresIn);
 
         Set<String> keys = map.keySet();

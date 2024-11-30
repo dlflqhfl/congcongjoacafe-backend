@@ -81,8 +81,8 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json;charset=UTF-8");
 
         // Secure, HttpOnly 쿠키에 refreshAccessToken 저장
-        Cookie refreshTokenCookie = new Cookie("refreshAccessToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(false);
 
         refreshTokenCookie.setSecure(false);  // 개발 후 https 보안이 적용되면 true로 변경
         refreshTokenCookie.setPath("/");
@@ -90,6 +90,8 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(refreshTokenCookie);
 
         tokenService.saveOwnerToken(sCode, refreshToken, authentication);
+
+        System.out.println(customOwnerDetails.isFirstLogin());
 
         //ResponseCode 사용하여 RsData 객체 생성 및 JSON 응답 작성
         Map<String, Object> responseData = new HashMap<>();
