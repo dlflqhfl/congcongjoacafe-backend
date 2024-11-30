@@ -13,11 +13,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.congcongjoa.congcongjoa.RsData.RsData;
 import com.congcongjoa.congcongjoa.dto.AllergyDTO;
 import com.congcongjoa.congcongjoa.dto.MenuDTO;
+import com.congcongjoa.congcongjoa.dto.MenuOptionDTO;
 import com.congcongjoa.congcongjoa.dto.NutritionDTO;
 import com.congcongjoa.congcongjoa.dto.OptionDTO;
+import com.congcongjoa.congcongjoa.dto.custom.RegMenuOptionDTO;
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
+import com.congcongjoa.congcongjoa.entity.MenuOption;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
+import com.congcongjoa.congcongjoa.service.MenuOptionService;
 import com.congcongjoa.congcongjoa.service.MenuService;
 import com.congcongjoa.congcongjoa.service.OptionService;
 import com.congcongjoa.congcongjoa.service.StoreService;
@@ -40,6 +44,9 @@ public class AdminController {
 
     @Autowired
     private OptionService optionService;
+
+    @Autowired
+    private MenuOptionService menuOptionService;
 
     @Autowired
     private AwsS3Service awsS3Service;
@@ -133,12 +140,10 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/menulist")
+    @GetMapping("/menuList")
     public RsData<List<MenuDTO>> getMenuList() {
 
         List<MenuDTO> menuDTO = menuService.getAllMenu();
-
-        System.out.println("menuDTO:"+menuDTO);
 
         return ResponseCode.OK.toRsData(menuDTO);
     }
@@ -153,6 +158,35 @@ public class AdminController {
         } else {
             return ResponseCode.USER_ALREADY_EXIST.toRsData(null);
         }
+    }
+
+    @GetMapping("/optionList")
+    public RsData<List<OptionDTO>> getOptionList() {
+
+        List<OptionDTO> optionDTO = optionService.getAllOption();
+
+        return ResponseCode.OK.toRsData(optionDTO);
+    }
+
+    @PostMapping("/regMenuOption")
+    public RsData<String> regMenuOption(@RequestBody RegMenuOptionDTO regMenuOption) {
+        
+        boolean result = menuOptionService.regMenuOption(regMenuOption);
+
+        if (result) {
+            return ResponseCode.OK.toRsData(null);
+        } else {
+            return ResponseCode.USER_ALREADY_EXIST.toRsData(null);
+        }
+    }
+
+    @GetMapping("/menuOptionList")
+    public RsData<List<MenuOptionDTO>> menuOptionList(@RequestParam Long mnId) {
+        
+        List<MenuOptionDTO>  menuOptionDTO = menuOptionService.getMenuOptionList(mnId);
+
+        return ResponseCode.OK.toRsData(menuOptionDTO);
+        
     }
     
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +36,7 @@ public class Option {
     @Column(name = "op_price")
     private Long opPrice;
 
+    //0 등록 / 1 삭제
     @Column(name = "op_status")
     private BooleanStatus opStatus;
 
