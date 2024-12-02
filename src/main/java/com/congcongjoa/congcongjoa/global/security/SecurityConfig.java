@@ -1,8 +1,9 @@
 package com.congcongjoa.congcongjoa.global.security;
 
 import com.congcongjoa.congcongjoa.jwt.JwtProvider;
-import com.congcongjoa.congcongjoa.jwt.LoginFilter;
-import com.congcongjoa.congcongjoa.jwt.OwnerLoginFilter;
+import com.congcongjoa.congcongjoa.jwt.filter.JwtAuthorizationFilter;
+import com.congcongjoa.congcongjoa.jwt.filter.LoginFilter;
+import com.congcongjoa.congcongjoa.jwt.filter.OwnerLoginFilter;
 import com.congcongjoa.congcongjoa.service.custom.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,30 +46,20 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/user/").hasRole("USER")
-                        .requestMatchers("/api/owner/").hasRole("OWNER")
-                        .requestMatchers("/api/admin/").hasRole("ADMIN")
+                        .requestMatchers("/api/user/**").hasRole("USER")
+                        .requestMatchers("/api/owner/**").hasRole("OWNER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**").disable())
+                .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
                 .headers(headers -> headers.addHeaderWriter(new XFrameOptionsHeaderWriter(
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // CORS 설정 확인
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionFixation().none()
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(false)
-                        .deleteCookies("JSESSIONID"));
-
-        // 세션 설정
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 상태 기반 세션 관리
 
         // 필터 추가
         http
+                .addFilterBefore(new JwtAuthorizationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(new OwnerLoginFilter(authenticationManager(authenticationConfiguration), jwtProvider, tokenService), UsernamePasswordAuthenticationFilter.class);
 

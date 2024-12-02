@@ -1,9 +1,8 @@
-package com.congcongjoa.congcongjoa.global.security;
+package com.congcongjoa.congcongjoa.jwt.filter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,40 +23,34 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final JwtProvider JwtProvider;
+    private final JwtProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if ("/api/owner/login".equals(request.getRequestURI()) ||
-                "/api/owner/logout".equals(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String authorizationHeader = request.getHeader("Authorization");
         String jwt = null;
         String username = null;
-        List<SimpleGrantedAuthority> authorities = null;
+        SimpleGrantedAuthority authority = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            if (JwtProvider.verify(jwt)) {
-                Map<String, Object> claims = JwtProvider.getClaims(jwt);
-                username = (String) claims.get("username");
-                authorities = ((List<String>) claims.get("authorities")).stream()
-                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            if (jwtProvider.verify(jwt)) {
+                Map<String, Object> claims = jwtProvider.getClaims(jwt);
+                String role = (String) claims.get("role");
+                authority = new SimpleGrantedAuthority(role);
+                username = jwtProvider.getUsernameByRole(jwt, role);
+
+                System.out.println(username + " " + role + " 권한 필터 확인");
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (JwtProvider.verify(jwt)) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
         filterChain.doFilter(request, response);

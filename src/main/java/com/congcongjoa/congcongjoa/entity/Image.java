@@ -42,7 +42,7 @@ public class Image {
     @Column(name = "i_name", nullable = false, length = 200)
     private String iName;
 
-    //0 메인 1 노메인 
+    //0 메인 1 노메인
     @Column(name = "i_main", nullable = false)
     private BooleanStatus iMain;
 
