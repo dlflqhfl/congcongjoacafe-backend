@@ -22,7 +22,7 @@ public class JwtProvider {
 
     @Value("${custom.jwt.secretKey}") String secretKeyCode;
 
-    private static final int ACCESS_TOKEN_VALIDITY = 60 * 60;      // 1시간
+    private static final int ACCESS_TOKEN_VALIDITY = 60*5;      // 1시간
     private static final int REFRESH_TOKEN_VALIDITY = 60 * 60 * 24 * 14; // 14일
 
     public JwtProvider(@Value("${custom.jwt.secretKey}") String secretKeyCode) {
@@ -56,8 +56,6 @@ public class JwtProvider {
 
         return jwtBuilder.signWith(getSecretKey()).compact();
     }
-
-
 
     //엑세스 코드 발급
     public String getAccessToken(Map<String, Object> map){
@@ -106,4 +104,28 @@ public class JwtProvider {
                 .getPayload();
     }
 
+    // 토큰의 특정 데이터를 역할에 따라 가져오는 메서드
+    public String getUsernameByRole(String token, String role) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            role = role.replace("ROLE_", "");
+
+
+            if ("OWNER".equals(role)) {
+                return claims.get("sCode", String.class);
+            } else if ("ADMIN".equals(role)) {
+                return claims.get("id", String.class);
+            } else if ("USER".equals(role)) {
+                return claims.get("email", String.class);
+            }
+        } catch (JwtException e) {
+            // 예외 처리
+        }
+        return null;
+    }
 }

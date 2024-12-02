@@ -60,9 +60,6 @@ public class Store {
     @Column(name = "y_axis", length = 100)
     private String yAxis;
 
-    @Column(name = "region", length = 100)
-    private String region;
-
     @Column(name = "s_phone", length = 100)
     private String sPhone;
 

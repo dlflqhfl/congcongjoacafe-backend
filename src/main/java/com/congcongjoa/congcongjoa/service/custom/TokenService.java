@@ -7,6 +7,7 @@ import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.repository.RefreshTokenRepository;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,9 @@ public class TokenService {
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
 
     //owner jwt로그인 인증
@@ -57,6 +61,11 @@ public class TokenService {
         refreshTokenRepository.save(redis);
     }
 
+    // TokenService에서 해당 토큰 무효화 로직
+    public void invalidateToken(String token) {
+        redisTemplate.opsForSet().add("blacklisted_tokens", token);
+    }
+
     private boolean isPasswordValid(Store store, String password) {
         StoreStatus status = store.getSStatus();
 
@@ -67,4 +76,7 @@ public class TokenService {
         };
     }
 
+    public boolean isTokenBlacklisted(String token) {
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember("blacklisted_tokens", token));
+    }
 }

@@ -1,4 +1,4 @@
-package com.congcongjoa.congcongjoa.jwt;
+package com.congcongjoa.congcongjoa.jwt.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
