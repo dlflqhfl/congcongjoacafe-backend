@@ -25,7 +25,6 @@ public class StoreDTO {
     private AddressVo sAddress;
     private String xAxis;
     private String yAxis;
-    private String region;
     private String sPhone;
     private BooleanStatus toGo;
     private String ceo;

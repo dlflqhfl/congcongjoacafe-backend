@@ -4,6 +4,8 @@ server:
     session:
       timeout: 24h
 spring:
+  profiles:
+    include: secret
   datasource:
     url: jdbc:mysql://43.200.245.38:3306/congcongjoa
     username: congcongjoa
@@ -41,6 +43,14 @@ spring:
       use-class-for-enum-values: true
   jackson:
     property-naming-strategy: LOWER_CAMEL_CASE
+cloud:
+  aws:
+    s3:
+      bucket: congcongjoa
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 custom:
   jwt:

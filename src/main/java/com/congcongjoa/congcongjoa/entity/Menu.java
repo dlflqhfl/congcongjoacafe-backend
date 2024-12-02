@@ -6,6 +6,7 @@ import java.util.List;
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.MenuCate;
 import com.congcongjoa.congcongjoa.enums.Size;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,15 +17,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "menu")
-@ToString(exclude = {"allergies", "nutritions", "menuOptions", "storeMenus", "images"})
+@ToString(exclude = {"allergy", "nutrition", "menuOption", "storeMenu", "images"})
 public class Menu {
 
     @Id
@@ -57,18 +60,20 @@ public class Menu {
     @Column(name = "mn_none", length = 200)
     private String mnNone;
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<Allergy> allergies = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private Allergy allergy;
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<Nutrition> nutritions = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private Nutrition nutrition;
 
+    @Builder.Default
     @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<MenuOption> menuOptions = new ArrayList<>();
+    private List<MenuOption> menuOption  = new ArrayList<>();
 
-    @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
-    private List<StoreMenu> storeMenus = new ArrayList<>();
+    @OneToOne(mappedBy = "menu" , fetch = FetchType.LAZY)
+    private StoreMenu storeMenu;
 
+    @Builder.Default
     @OneToMany(mappedBy = "menu" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
     

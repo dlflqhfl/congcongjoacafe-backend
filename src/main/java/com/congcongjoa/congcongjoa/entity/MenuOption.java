@@ -3,6 +3,9 @@ package com.congcongjoa.congcongjoa.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,15 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "menu_option")
-@ToString(exclude = {"detailOptions", "menu", "option"})
+@ToString(exclude = {"detailOptions"})
 public class MenuOption {
 
     @Id
@@ -39,6 +44,7 @@ public class MenuOption {
     @Column(name = "mo_none", length = 200)
     private String moNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "menuOption" , fetch = FetchType.LAZY)
     private List<DetailOption> detailOptions = new ArrayList<>();
 

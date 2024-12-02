@@ -1,16 +1,18 @@
 package com.congcongjoa.congcongjoa.service.custom;
 
 import com.congcongjoa.congcongjoa.dto.custom.CustomOwnerDetails;
+import com.congcongjoa.congcongjoa.entity.redis.RefreshToken;
 import com.congcongjoa.congcongjoa.entity.Store;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
+import com.congcongjoa.congcongjoa.repository.RefreshTokenRepository;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TokenService {
@@ -20,6 +22,12 @@ public class TokenService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
 
     //owner jwt로그인 인증
@@ -34,18 +42,28 @@ public class TokenService {
     }
 
     @Transactional
-    public void saveOwnerToken(String sCode, String accessToken, String refreshToken, Authentication authentication) {
+    public void saveOwnerToken(String sCode, String refreshToken, Authentication authentication) {
         Store store = storeRepository.findBysCode(sCode);
 
         // Store 상태를 확인하여 isFirstLogin 값 설정
         boolean isFirstLogin = store.getSStatus() == StoreStatus.REGISTERED;
-        
-        store.updateTokens(accessToken, refreshToken);
-        storeRepository.save(store);
+
+
 
         // CustomOwnerDetails에 isFirstLogin 값 설정
         CustomOwnerDetails customOwnerDetails = (CustomOwnerDetails) authentication.getPrincipal();
         customOwnerDetails.setFirstLogin(isFirstLogin);
+
+        // 리프래시 토큰을 Redis에 저장
+        RefreshToken redis = new RefreshToken(refreshToken, sCode);
+
+
+        refreshTokenRepository.save(redis);
+    }
+
+    // TokenService에서 해당 토큰 무효화 로직
+    public void invalidateToken(String token) {
+        redisTemplate.opsForSet().add("blacklisted_tokens", token);
     }
 
     private boolean isPasswordValid(Store store, String password) {
@@ -58,4 +76,7 @@ public class TokenService {
         };
     }
 
+    public boolean isTokenBlacklisted(String token) {
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember("blacklisted_tokens", token));
+    }
 }

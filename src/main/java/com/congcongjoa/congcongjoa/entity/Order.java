@@ -20,11 +20,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @ToString(exclude = {"orderDetails", "payments", "member"})
 public class Order {
     
@@ -47,9 +48,11 @@ public class Order {
     @Column(name = "or_none", length = 200)
     private String orNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order" , fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "order" , fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 

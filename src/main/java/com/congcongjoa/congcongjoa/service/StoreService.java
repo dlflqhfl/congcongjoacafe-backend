@@ -16,6 +16,7 @@ public class StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
+    
 
     public boolean checkStoreName(String storeName) {
         try {
@@ -39,15 +40,14 @@ public class StoreService {
 
     public boolean regStore(RegStoreDTO regStoreDTO) {
         try {
-
+            
             Store store = Store.builder()
-                    .sCode(regStoreDTO.getStoreCode())
-                    .sName(regStoreDTO.getName())
-                    .sPw(regStoreDTO.getInitialPassword())
-                    .sStatus(StoreStatus.REGISTERED)
-                    .build();
-
-
+                .sCode(regStoreDTO.getStoreCode())
+                .sName(regStoreDTO.getName())
+                .sPw(regStoreDTO.getInitialPassword())
+                .sStatus(StoreStatus.REGISTERED)
+                .build();
+    
             storeRepository.save(store);
 
             return true;
