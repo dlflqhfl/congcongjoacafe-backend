@@ -13,4 +13,5 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     @Query("select count(m) > 0 from Member m where m.mEmail = :mEmail and m.mStatus = :mStatus")
     boolean existsByMEmailAndMStatus(String mEmail, BooleanStatus mStatus);
 
+    Member save(Member member);
 }

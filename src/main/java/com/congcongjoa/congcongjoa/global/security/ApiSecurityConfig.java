@@ -18,34 +18,34 @@ public class ApiSecurityConfig {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    @Bean
-    SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception{
-        http
-            .securityMatcher("/api/**") 
-            .authorizeHttpRequests(
-                authorizeHttpRequests -> authorizeHttpRequests
-                    .requestMatchers("/api/*","/api/member/**").permitAll()
-                    .requestMatchers(HttpMethod.POST,"/api/member/login").permitAll()
-                    .requestMatchers(HttpMethod.POST,"/api/member/logout").permitAll()
-                    .anyRequest().authenticated()
-            )
-            .csrf(
-                csrf -> csrf.disable()
-            )
-            .httpBasic(
-                httpBasic -> httpBasic.disable()
-            ) 
-            .formLogin(
-                formLogin -> formLogin.disable()
-            )
-            .sessionManagement(
-                sessionManagement -> sessionManagement.sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS)
-            )
-            .addFilterBefore(jwtAuthorizationFilter,
-             UsernamePasswordAuthenticationFilter.class
-             );
-        return http.build();
-    }
+    // @Bean
+    // SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception{
+    //     http
+    //         .securityMatcher("/api/**") 
+    //         .authorizeHttpRequests(
+    //             authorizeHttpRequests -> authorizeHttpRequests
+    //                 .requestMatchers("/api/*","/api/member/**").permitAll()
+    //                 .requestMatchers(HttpMethod.POST,"/api/member/login").permitAll()
+    //                 .requestMatchers(HttpMethod.POST,"/api/member/logout").permitAll()
+    //                 .anyRequest().authenticated()
+    //         )
+    //         .csrf(
+    //             csrf -> csrf.disable()
+    //         )
+    //         .httpBasic(
+    //             httpBasic -> httpBasic.disable()
+    //         ) 
+    //         .formLogin(
+    //             formLogin -> formLogin.disable()
+    //         )
+    //         .sessionManagement(
+    //             sessionManagement -> sessionManagement.sessionCreationPolicy(
+    //                 SessionCreationPolicy.STATELESS)
+    //         )
+    //         .addFilterBefore(jwtAuthorizationFilter,
+    //          UsernamePasswordAuthenticationFilter.class
+    //          );
+    //     return http.build();
+    // }
     
 }
