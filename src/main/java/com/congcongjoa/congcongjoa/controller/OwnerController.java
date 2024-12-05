@@ -25,10 +25,4 @@ public class OwnerController {
     public void setupStore(){
         System.out.println("setupStore");
     }
-
-
-
-
-
-
 }

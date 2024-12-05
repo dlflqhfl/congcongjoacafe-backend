@@ -4,6 +4,7 @@ import com.congcongjoa.congcongjoa.dto.custom.CustomOwnerDetails;
 import com.congcongjoa.congcongjoa.entity.redis.RefreshToken;
 import com.congcongjoa.congcongjoa.entity.Store;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
+import com.congcongjoa.congcongjoa.jwt.JwtProvider;
 import com.congcongjoa.congcongjoa.repository.RefreshTokenRepository;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class TokenService {
@@ -28,6 +32,9 @@ public class TokenService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
 
     //owner jwt로그인 인증
@@ -78,5 +85,33 @@ public class TokenService {
 
     public boolean isTokenBlacklisted(String token) {
         return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember("blacklisted_tokens", token));
+    }
+
+    public String createAccessTokenFromRefreshToken(String refreshToken) {
+        if (!jwtProvider.verify(refreshToken)) {
+            throw new RuntimeException("유효하지 않은 리프레시 토큰");
+        }
+
+        Map<String, Object> claims = jwtProvider.getClaims(refreshToken);
+        String role = (String) claims.get("role");
+        Map<String, Object> tokenData = new HashMap<>();
+        tokenData.put("role", role);
+
+        switch (role) {
+            case "ROLE_USER":
+                String email = (String) claims.get("email");
+                tokenData.put("email", email);
+                break;
+            case "ROLE_ADMIN":
+                String id = (String) claims.get("id");
+                tokenData.put("id", id);
+                break;
+            case "ROLE_OWNER":
+                String sCode = (String) claims.get("sCode");
+                tokenData.put("sCode", sCode);
+                break;
+        }
+
+        return jwtProvider.getAccessToken(tokenData);
     }
 }
