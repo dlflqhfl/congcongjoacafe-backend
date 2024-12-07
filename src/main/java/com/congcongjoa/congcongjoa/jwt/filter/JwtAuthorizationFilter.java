@@ -30,29 +30,37 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
-        String jwt = null;
-        String username = null;
-        SimpleGrantedAuthority authority = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String jwt = authorizationHeader.substring(7);
+        try {
             if (jwtProvider.verify(jwt)) {
                 Map<String, Object> claims = jwtProvider.getClaims(jwt);
                 String role = (String) claims.get("role");
-                authority = new SimpleGrantedAuthority(role);
-                username = jwtProvider.getUsernameByRole(jwt, role);
-
-                System.out.println(username + " " + role + " 권한 필터 확인");
+                if (role == null || role.isEmpty()) {
+                    logger.warn("Invalid role in JWT");
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                String username = jwtProvider.getUsernameByRole(jwt, role);
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    logger.info("Successfully authenticated user");
+                }
             }
-        }
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } catch (Exception e) {
+            logger.warn("JWT processing failed: {}");
         }
 
         filterChain.doFilter(request, response);
     }
+
 }

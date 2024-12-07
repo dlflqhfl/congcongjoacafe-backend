@@ -19,5 +19,4 @@ public class CouponRuleDTO {
     private Long crTarget;
     private String crNone;
     private List<CouponDTO> coupons = new ArrayList<>();
-
 }
