@@ -2,6 +2,7 @@ package com.congcongjoa.congcongjoa.entity;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 
+import com.congcongjoa.congcongjoa.enums.ICATE;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,7 +38,7 @@ public class Image {
 
     //0 매장 / 1 메뉴
     @Column(name = "i_cate", nullable = false)
-    private BooleanStatus iCate;
+    private ICATE iCate;
 
     @Column(name = "i_name", nullable = false, length = 200)
     private String iName;

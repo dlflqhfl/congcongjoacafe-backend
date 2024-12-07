@@ -22,7 +22,7 @@ public class JwtProvider {
 
     @Value("${custom.jwt.secretKey}") String secretKeyCode;
 
-    private static final int ACCESS_TOKEN_VALIDITY = 60*5;      // 1시간
+    private static final int ACCESS_TOKEN_VALIDITY = 60 * 60;      // 1시간
     private static final int REFRESH_TOKEN_VALIDITY = 60 * 60 * 24 * 14; // 14일
 
     public JwtProvider(@Value("${custom.jwt.secretKey}") String secretKeyCode) {
