@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.Arrays;
+import java.util.Map;
 
 
 @RestController
@@ -25,16 +25,17 @@ public class JwtController {
 
     @PostMapping("/auth/refresh-token")
     @Operation(summary = "엑세스 토큰 요청", description = "refresh token을 사용해 새로운 access token을 요청")
-    public RsData<String> refreshAccessToken(@CookieValue(value = "refreshToken") String refreshToken) {
-        try {
-            if (refreshToken == null || refreshToken.isEmpty()) {
-                return ResponseCode.UNAUTHORIZED.toRsData(null); // refreshToken이 없으면 401 응답
-            }
+    public RsData<Map<String, String>>  refreshAccessToken(@CookieValue(value = "refreshToken") String refreshToken) {
 
+        if (!isValidRefreshToken(refreshToken)) {
+            return unauthorizedResponse();
+        }
+
+        try {
             String newAccessToken = tokenService.createAccessTokenFromRefreshToken(refreshToken);
-            return ResponseCode.OK.toRsData(newAccessToken);
+            return ResponseCode.OK.toRsData(Map.of("accessToken", newAccessToken));
         } catch (Exception e) {
-            return ResponseCode.UNAUTHORIZED.toRsData(null);
+            return unauthorizedResponse();
         }
     }
 
@@ -44,11 +45,9 @@ public class JwtController {
         // 쿠키 삭제
         Cookie[] cookies = request.getCookies();
 
-        System.out.println(Arrays.toString(cookies) + "하이");
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("refreshToken".equals(cookie.getName())) {
-                    System.out.println("refreshToken");
 
                     //토큰 블랙리스트
                     tokenService.invalidateToken(cookie.getValue());
@@ -61,7 +60,14 @@ public class JwtController {
                 }
             }
         }
-
         return ResponseCode.OK.toRsData("logout success");
+    }
+
+    private boolean isValidRefreshToken(String refreshToken) {
+        return refreshToken != null && !refreshToken.isEmpty();
+    }
+
+    private RsData<Map<String, String>> unauthorizedResponse() {
+        return ResponseCode.UNAUTHORIZED.toRsData(null);
     }
 }
