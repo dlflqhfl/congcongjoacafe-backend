@@ -16,18 +16,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "store_menu")
-@ToString(exclude = {"orderDetails"})
+@ToString(exclude = {"orderDetails", "store", "menu"})
 public class StoreMenu {
     
     @Id
@@ -39,7 +38,7 @@ public class StoreMenu {
     @JoinColumn(name = "s_idx", referencedColumnName = "s_idx")
     private Store store;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mn_idx", referencedColumnName = "mn_idx")
     private Menu menu;
 
@@ -56,6 +55,7 @@ public class StoreMenu {
     @Column(name = "sm_none", length = 200)
     private String smNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "storeMenu" , fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
     

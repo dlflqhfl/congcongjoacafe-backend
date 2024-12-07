@@ -22,17 +22,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @Getter
-@Setter
 @Entity
 @Table(name = "coupon")
-@ToString(exclude = {"userCoupons"})
+@ToString(exclude = {"userCoupons", "couponRule"})
 public class Coupon {
 
     @Id
@@ -68,7 +66,7 @@ public class Coupon {
     @Column(name = "c_none", length = 200)
     private String cNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "coupon" , fetch = FetchType.LAZY)
     private List<UserCoupon> userCoupons = new ArrayList<>();
-
 }

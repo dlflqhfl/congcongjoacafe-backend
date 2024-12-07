@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
+import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.vo.AddressVo;
 import com.congcongjoa.congcongjoa.vo.StartEndVo;
 
@@ -20,14 +21,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(toBuilder = true)
 @Getter
-@Setter
 @Entity
 @Table(name = "store")
 @ToString(exclude = {"storeMenus", "images"})
@@ -44,12 +43,6 @@ public class Store {
     @Column(name = "s_pw", nullable = false, length = 200)
     private String sPw;
 
-    @Column(name = "s_access_token", length = 1024)
-    private String sAccessToken;
-
-    @Column(name = "s_refresh_token", length = 1024)
-    private String sRefreshToken;
-    
     @Column(name = "s_name", nullable = false, length = 200)
     private String sName;
     
@@ -67,46 +60,53 @@ public class Store {
     @Column(name = "y_axis", length = 100)
     private String yAxis;
 
-    @Column(name = "region", length = 100)
-    private String region;
-
     @Column(name = "s_phone", length = 100)
     private String sPhone;
-
-    //0: 매장이용 1: 포장만 가능
-    @Enumerated(EnumType.STRING)
-    @Column(name = "to_go", nullable = false)
-    private BooleanStatus toGo;
 
     @Column(name = "ceo", length = 100)
     private String ceo;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "start", column = @Column(name = "s_start", nullable = false)),
-            @AttributeOverride(name = "end", column = @Column(name = "s_end", nullable = false))
+            @AttributeOverride(name = "start", column = @Column(name = "s_start")),
+            @AttributeOverride(name = "end", column = @Column(name = "s_end"))
     })
     private StartEndVo sStartEnd;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_drive_thru")
+    private BooleanStatus sDriveThru;
+
     //0: 주차가능 1: 주차불가
     @Enumerated(EnumType.STRING)
-    @Column(name = "s_park", nullable = false)
+    @Column(name = "s_park")
     private BooleanStatus sPark;
 
-    @Column(name = "directions", length = 200)
-    private String directions;
-
-    //0: 운영 1: 폐점
+    //0: 매장이용 1: 포장만 가능
     @Enumerated(EnumType.STRING)
-    @Column(name = "s_status", nullable = false)
-    private BooleanStatus sStatus;
+    @Column(name = "s_store_use")
+    private BooleanStatus sStoreUse;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_wifi")
+    private BooleanStatus sWifi;
+
+    @Column(name = "s_directions", length = 1000)
+    private String sDirections;
+
+    //0: 둥록요청 1: 운영중 2:폐점
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_status")
+    private StoreStatus sStatus;
 
     @Column(name = "s_none", length = 200)
     private String sNone;
 
+    @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<StoreMenu> storeMenus = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 

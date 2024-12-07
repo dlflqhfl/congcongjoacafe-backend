@@ -14,18 +14,18 @@ public interface MenuMapper {
 
     MenuMapper INSTANCE = Mappers.getMapper(MenuMapper.class);
 
-    @Mapping(target = "allergies", ignore = true)
-    @Mapping(target = "nutritions", ignore = true)
-    @Mapping(target = "menuOptions", ignore = true)
-    @Mapping(target = "storeMenus", ignore = true)
-    @Mapping(target = "images", ignore = true)
+    @Mapping(target = "allergy", source = "allergy")
+    @Mapping(target = "nutrition", source = "nutrition")
+    @Mapping(target = "menuOption", source = "menuOption")
+    @Mapping(target = "storeMenu", source = "storeMenu")
+    @Mapping(target = "images", source = "images")
     MenuDTO toMenuDTO(Menu menu);
 
-    @Mapping(target = "allergies", ignore = true)
-    @Mapping(target = "nutritions", ignore = true)
-    @Mapping(target = "menuOptions", ignore = true)
-    @Mapping(target = "storeMenus", ignore = true)
-    @Mapping(target = "images", ignore = true)
+    @Mapping(target = "allergy", source = "allergy")
+    @Mapping(target = "nutrition", source = "nutrition")
+    @Mapping(target = "menuOption", source = "menuOption")
+    @Mapping(target = "storeMenu", source = "storeMenu")
+    @Mapping(target = "images", source = "images")
     Menu toMenu(MenuDTO menuDTO);
 
     List<MenuDTO> toMenuDTOList(List<Menu> menuList);
