@@ -2,6 +2,7 @@ package com.congcongjoa.congcongjoa.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +68,17 @@ public class AwsS3Service {
     public void deleteFile(String path, String fileName) {
         String fullPath = path + fileName;
         amazonS3.deleteObject(bucketName, fullPath);
+    }
+
+    public void rollbackFile(List<String> uploadedFileNames, String path) {
+        for (String fileName : uploadedFileNames) {
+            try {
+                deleteFile(path, fileName);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
     
 }

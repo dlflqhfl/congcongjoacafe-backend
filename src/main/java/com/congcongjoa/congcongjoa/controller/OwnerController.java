@@ -3,7 +3,6 @@ import com.congcongjoa.congcongjoa.RsData.RsData;
 import com.congcongjoa.congcongjoa.dto.StoreDTO;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
-import com.congcongjoa.congcongjoa.service.ImageService;
 import com.congcongjoa.congcongjoa.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,6 @@ public class OwnerController {
     private StoreService storeService;
 
     @Autowired
-    private ImageService imageService;
-
-    @Autowired
     private AwsS3Service awsS3Service;
 
     @PostMapping("/register")
@@ -29,15 +25,11 @@ public class OwnerController {
                                      @RequestPart(value = "images") List<MultipartFile> images,
                                      @RequestPart(value = "mainImageIndex") String mainImageIndex) {
         Integer mainImageIndexInt = Integer.parseInt(mainImageIndex);
-        System.out.println("mainImageIndex : " + mainImageIndex);
-        System.out.println("images : " + images);
-        System.out.println("storeDTO : " + storeDTO);
 
-        System.out.println(storeDTO.getSAddress().getDetail());
-        System.out.println(storeDTO.getSAddress().getPostCode());
-        System.out.println(storeDTO.getSAddress().getStreet());
+        System.out.println(mainImageIndexInt);
+        System.out.println(images);
+        List<String> uploadedFileNames = new ArrayList<>();
         try {
-            List<String> uploadedFileNames = new ArrayList<>();
 
             if (images != null) {
                 for (MultipartFile file : images) {
@@ -51,11 +43,16 @@ public class OwnerController {
                 }
             }
 
-            imageService.regStoreImages(uploadedFileNames, mainImageIndexInt);
+            boolean reg = storeService.registerStoreWithImages(uploadedFileNames, mainImageIndexInt, storeDTO);
+
+            if (!reg) {
+                throw new IllegalStateException("Store registration failed: User already exists");
+            }
             return ResponseCode.OK.toRsData("저장 완료");
         } catch (Exception e) {
-            System.err.println("오류 발생: " + e.getMessage());
-            return ResponseCode.INTERNAL_SERVER_ERROR.toRsData("처리 중 오류 발생");
+            System.out.println(e.getMessage());
+            awsS3Service.rollbackFile(uploadedFileNames, "store/");
+            return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(e.getMessage());
         }
     }
 }

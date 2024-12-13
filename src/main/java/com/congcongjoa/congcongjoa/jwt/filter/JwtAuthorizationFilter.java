@@ -44,6 +44,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 if (role == null || role.isEmpty()) {
                     logger.warn("Invalid role in JWT");
                     filterChain.doFilter(request, response);
+                    System.out.println(role);
                     return;
                 }
                 String username = jwtProvider.getUsernameByRole(jwt, role);
@@ -53,14 +54,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println(username);
                     logger.info("Successfully authenticated user");
                 }
             }
         } catch (Exception e) {
+            System.out.println(e);
             logger.warn("JWT processing failed: {}");
         }
-
         filterChain.doFilter(request, response);
     }
-
 }
