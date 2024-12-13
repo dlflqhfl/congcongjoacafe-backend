@@ -53,5 +53,4 @@ public class Image {
 
     @Column(name = "i_none", length = 200)
     private String iNone;
-    
 }

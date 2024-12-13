@@ -33,6 +33,7 @@ public class StoreDTO {
     @JsonProperty("s_phone")
     private String sPhone;
     private String ceo;
+    @JsonProperty("s_start_end")
     private StartEndVo sStartEnd;
     @JsonProperty("s_drive_thru")
     private BooleanStatus sDriveThru;
