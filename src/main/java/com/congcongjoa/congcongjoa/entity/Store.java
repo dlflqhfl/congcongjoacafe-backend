@@ -110,4 +110,26 @@ public class Store {
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
+    public void update(Store store) {
+        updateField(store.getSName(), this.sName, value -> this.sName = value);
+        updateField(store.getSAddress(), this.sAddress, value -> this.sAddress = value);
+        updateField(store.getSPhone(), this.sPhone, value -> this.sPhone = value);
+        updateField(store.getCeo(), this.ceo, value -> this.ceo = value);
+        updateField(store.getSStartEnd(), this.sStartEnd, value -> this.sStartEnd = value);
+        updateField(store.getSDriveThru(), this.sDriveThru, value -> this.sDriveThru = value);
+        updateField(store.getSPark(), this.sPark, value -> this.sPark = value);
+        updateField(store.getSStoreUse(), this.sStoreUse, value -> this.sStoreUse = value);
+        updateField(store.getSWifi(), this.sWifi, value -> this.sWifi = value);
+        updateField(store.getSDirections(), this.sDirections, value -> this.sDirections = value);
+        updateField(store.getSStatus(), this.sStatus, value -> this.sStatus = value);
+        updateField(store.getSNone(), this.sNone, value -> this.sNone = value);
+        updateField(store.getXAxis(), this.xAxis, value -> this.xAxis = value);
+        updateField(store.getYAxis(), this.yAxis, value -> this.yAxis = value);
+    }
+
+    private <T> void updateField(T newValue, T currentValue, java.util.function.Consumer<T> updater) {
+        if (newValue != null && !newValue.equals(currentValue)) {
+            updater.accept(newValue);
+        }
+    }
 }   

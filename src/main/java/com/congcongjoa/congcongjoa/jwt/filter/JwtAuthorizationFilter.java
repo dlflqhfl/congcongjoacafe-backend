@@ -53,14 +53,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println(username);
                     logger.info("Successfully authenticated user");
                 }
             }
         } catch (Exception e) {
+            System.out.println(e);
             logger.warn("JWT processing failed: {}");
         }
-
         filterChain.doFilter(request, response);
     }
-
 }
