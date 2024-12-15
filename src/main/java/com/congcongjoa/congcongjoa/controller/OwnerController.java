@@ -4,6 +4,7 @@ import com.congcongjoa.congcongjoa.dto.StoreDTO;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
 import com.congcongjoa.congcongjoa.service.StoreService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ public class OwnerController {
     private AwsS3Service awsS3Service;
 
     @PostMapping("/register")
+    @Operation(summary = "매점 등록", description = "스토어 정보 이미지를 리엑트 서버로 부터 받아와 매점 정보와 이미지 등록")
     public RsData<String> setupStore(@RequestPart(value = "store") StoreDTO storeDTO,
                                      @RequestPart(value = "images") List<MultipartFile> images,
                                      @RequestPart(value = "mainImageIndex") String mainImageIndex) {
@@ -48,11 +50,18 @@ public class OwnerController {
             if (!reg) {
                 throw new IllegalStateException("Store registration failed: User already exists");
             }
-            return ResponseCode.OK.toRsData("저장 완료");
+
+            return ResponseCode.OK.toRsData("매장 정보 저장 완료");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             awsS3Service.rollbackFile(uploadedFileNames, "store/");
             return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(e.getMessage());
         }
+    }
+
+    @GetMapping("/stats")
+    @Operation(summary = "불러오기")
+    public RsData<String> getStats() {
+        return ResponseCode.OK.toRsData("success");
     }
 }

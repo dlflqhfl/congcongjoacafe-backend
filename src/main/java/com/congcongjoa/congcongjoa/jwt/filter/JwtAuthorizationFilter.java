@@ -44,7 +44,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 if (role == null || role.isEmpty()) {
                     logger.warn("Invalid role in JWT");
                     filterChain.doFilter(request, response);
-                    System.out.println(role);
                     return;
                 }
                 String username = jwtProvider.getUsernameByRole(jwt, role);

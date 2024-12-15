@@ -74,13 +74,15 @@ public class TokenService {
     }
 
     private boolean isPasswordValid(Store store, String password) {
-        StoreStatus status = store.getSStatus();
+        String passwordEncode = store.getSNone();
 
-        return switch (status) {
-            case REGISTERED -> store.getSPw().equals(password);
-            case OPEN -> passwordEncoder.matches(password, store.getSPw());
-            default -> false;
-        };
+        if (passwordEncode == null) {
+            return store.getSPw().equals(password);
+        } else if (!passwordEncode.isEmpty()) {
+            return passwordEncoder.matches(password, store.getSPw());
+        } else {
+            return false;
+        }
     }
 
     public boolean isTokenBlacklisted(String token) {
