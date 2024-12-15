@@ -47,6 +47,11 @@ public class StoreService {
         }
     }
 
+    // 모든 매장의 키값과 이름을 가져온다
+    public List<StoreDTO> findIdAndSName() {
+        return storeRepository.findSName();
+    }
+
     public boolean regStore(RegStoreDTO regStoreDTO) {
         try {
             
@@ -70,61 +75,45 @@ public class StoreService {
 
     @Transactional
     public boolean registerStoreWithImages(List<String> uploadedFileNames, Integer mainImageIndex, StoreDTO storeDTO) {
+        try {
+            String mainImageFileName = uploadedFileNames.get(mainImageIndex);
 
-        String mainImageFileName = uploadedFileNames.get(mainImageIndex);
-        System.out.println(mainImageFileName);
+            // Store 객체 생성 및 상태 업데이트
+            Store newStore = StoreMapper.INSTANCE.toStore(storeDTO).toBuilder()
+                    .sStatus(StoreStatus.OPEN)
+                    .build();
 
-        Store store = StoreMapper.INSTANCE.toStore(storeDTO);
-
-        store = store.toBuilder()
-                .sStatus(StoreStatus.OPEN)
-                .build();
-
-        System.out.println(store);
-
-        //sotre id찾기
-        Store storeId = storeRepository.findBysName(store.getSName());
-
-
-        if (storeId != null) {
-            storeId.update(store);
-             storeRepository.save(storeId);
-        }
-
-        //이미지 저장
-        for (String uploadedFileName : uploadedFileNames) {
-            Image image = null;
-
-            if (uploadedFileName.equals(mainImageFileName)) {
-                image = Image.builder()
-                        .iName(mainImageFileName) // 메인 이미지
-                        .store(storeId)
-                        .iCate(ICATE.STORE)
-                        .iMain(BooleanStatus.TRUE)
-                        .iStatus(BooleanStatus.TRUE)
-                        .build();
-            } else {
-                image = Image.builder()
-                        .iName(uploadedFileName) // else에서는 uploadedFileName 사용
-                        .store(storeId)
-                        .iCate(ICATE.STORE)
-                        .iMain(BooleanStatus.FALSE)
-                        .iStatus(BooleanStatus.TRUE)
-                        .build();
+            // 기존 Store 조회 및 업데이트
+            Store existingStore = storeRepository.findBysName(newStore.getSName());
+            if (existingStore != null) {
+                existingStore.update(newStore);
+                storeRepository.save(existingStore);
             }
 
-            // 새로 생성한 Image 객체를 데이터베이스에 저장
-            if (image != null) {
+            // 이미지 생성 및 저장
+            for (String uploadedFileName : uploadedFileNames) {
+                Image image = createImage(uploadedFileName, uploadedFileName.equals(mainImageFileName), existingStore);
                 imageRepository.save(image);
             }
-        }
-        return false;
-    }
-        // 모든 매장의 키값과 이름을 가져온다
-    public List<StoreDTO> findIdAndSName() {
 
-        return storeRepository.findSName();
+            return true; // 모든 작업 성공 시 true 반환
+        } catch (Exception e) {
+            e.printStackTrace(); // 로그 출력 (추후 로깅 프레임워크 권장)
+            return false; // 예외 발생 시 false 반환
+        }
     }
+
+    // 이미지를 생성하는 로직을 별도 메서드로 추출
+    private Image createImage(String imageName, boolean isMainImage, Store store) {
+        return Image.builder()
+                .iName(imageName)
+                .store(store)
+                .iCate(ICATE.STORE)
+                .iMain(isMainImage ? BooleanStatus.TRUE : BooleanStatus.FALSE)
+                .iStatus(BooleanStatus.TRUE)
+                .build();
+    }
+
 
 
 }
