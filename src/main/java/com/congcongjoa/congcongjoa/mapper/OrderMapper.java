@@ -2,12 +2,12 @@ package com.congcongjoa.congcongjoa.mapper;
 
 import java.util.List;
 
+import com.congcongjoa.congcongjoa.entity.Orders;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.congcongjoa.congcongjoa.dto.OrderDTO;
-import com.congcongjoa.congcongjoa.entity.Order;
 
 @Mapper
 public interface OrderMapper {
@@ -17,15 +17,15 @@ public interface OrderMapper {
     @Mapping(source = "member.id", target = "MIdx")
     @Mapping(target = "orderDetails", ignore = true)
     @Mapping(target = "payments", ignore = true)
-    OrderDTO toOrderDTO(Order order);
+    OrderDTO toOrderDTO(Orders orders);
 
     @Mapping(source = "MIdx", target = "member.id")
     @Mapping(target = "orderDetails", ignore = true)
     @Mapping(target = "payments", ignore = true)
-    Order toOrder(OrderDTO orderDTO);
+    Orders toOrder(OrderDTO orderDTO);
 
-    List<OrderDTO> toOrderDTOList(List<Order> orderList);
+    List<OrderDTO> toOrderDTOList(List<Orders> ordersList);
 
-    List<Order> toOrderList(List<OrderDTO> orderDTOList);
+    List<Orders> toOrderList(List<OrderDTO> orderDTOList);
     
 }
