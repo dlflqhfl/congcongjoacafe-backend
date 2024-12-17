@@ -8,6 +8,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.congcongjoa.congcongjoa.jwt.filter.JwtAuthorizationFilter;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration

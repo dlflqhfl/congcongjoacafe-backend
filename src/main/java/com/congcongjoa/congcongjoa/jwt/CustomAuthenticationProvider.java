@@ -24,8 +24,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         UserDetails user = tokenService.findUserBySNameAndPasswordAndSCode(sName, password, sCode);
 
+        // null 체크 추가
         if (user == null) {
-            throw new BadCredentialsException("Invalid credentials");
+            throw new BadCredentialsException("Invalid user credentials");
         }
 
         return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());

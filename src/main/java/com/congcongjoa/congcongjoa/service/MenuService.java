@@ -3,6 +3,7 @@ package com.congcongjoa.congcongjoa.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.congcongjoa.congcongjoa.enums.ICATE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,7 +85,7 @@ public class MenuService {
                 Image image = Image.builder()
                     .menu(menu)
                     .iName(filename)
-                    .iCate(BooleanStatus.FALSE) // 메뉴
+                    .iCate(ICATE.MENU) // 메뉴
                     .iStatus(BooleanStatus.TRUE)
                     .iMain(main)
                     .build();
@@ -178,7 +179,7 @@ public class MenuService {
                     Image image = Image.builder()
                         .menu(menu)
                         .iName(filename)
-                        .iCate(BooleanStatus.FALSE) // 메뉴
+                        .iCate(ICATE.MENU) // 메뉴
                         .iStatus(BooleanStatus.TRUE)
                         .iMain(main)
                         .build();

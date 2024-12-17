@@ -6,6 +6,10 @@ server:
 spring:
   profiles:
     include: secret
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+    time-zone: Asia/Seoul
+    property-naming-strategy: LOWER_CAMEL_CASE
   datasource:
     url: jdbc:mysql://43.200.245.38:3306/congcongjoa
     username: congcongjoa
@@ -41,8 +45,7 @@ spring:
     cache: false
     enums:
       use-class-for-enum-values: true
-  jackson:
-    property-naming-strategy: LOWER_CAMEL_CASE
+
 cloud:
   aws:
     s3:

@@ -69,5 +69,4 @@ public class Coupon {
     @Builder.Default
     @OneToMany(mappedBy = "coupon" , fetch = FetchType.LAZY)
     private List<UserCoupon> userCoupons = new ArrayList<>();
-
 }

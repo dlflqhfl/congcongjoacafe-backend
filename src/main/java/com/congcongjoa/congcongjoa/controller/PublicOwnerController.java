@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/public/owner")
+@RequestMapping("/api/public/owner")
 public class PublicOwnerController {
 
     @Autowired
@@ -20,6 +20,7 @@ public class PublicOwnerController {
     @GetMapping("/stores")
     @Operation(summary = "지점 조회", description = "모든 지점의 키값, 지점명을 반환합니다.")
     public RsData<List<StoreDTO>> getStores() {
+        System.out.println("하이");
         try {
             List<StoreDTO> stores = storeService.findIdAndSName();
             return ResponseCode.OK.toRsData(stores);

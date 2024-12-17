@@ -1,8 +1,11 @@
-package com.congcongjoa.congcongjoa.jwt;
+package com.congcongjoa.congcongjoa.jwt.filter;
 import com.congcongjoa.congcongjoa.dto.custom.CustomOwnerDetails;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
+import com.congcongjoa.congcongjoa.jwt.CustomAuthenticationToken;
+import com.congcongjoa.congcongjoa.jwt.JwtProvider;
 import com.congcongjoa.congcongjoa.service.custom.TokenService;
 import jakarta.servlet.FilterChain;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,8 +50,6 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
             String password = requestMap.get("password");
             String sName = requestMap.get("sName");
 
-            System.out.println(sCode + " " + password + " " + sName);
-
             CustomAuthenticationToken authRequest = new CustomAuthenticationToken(sCode, password, sName);
             return authenticationManager.authenticate(authRequest);
 
@@ -76,19 +77,34 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtProvider.getAccessToken(tokenData);
         String refreshToken = jwtProvider.getRefreshToken(tokenData);
 
+        // **블랙리스트 검사**
+        if (tokenService.isTokenBlacklisted(refreshToken)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json;charset=UTF-8");
+
+            // JSON 응답 작성
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(ResponseCode.UNAUTHORIZED.toRsData(null));
+            response.getWriter().write(jsonResponse);
+            return;
+        }
+
         // 응답 설정
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
 
-        // Secure, HttpOnly 쿠키에 refreshToken 저장
+        // Secure, HttpOnly 쿠키에 refreshAccessToken 저장
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(false);  // 개발 후 https 보안이 적용되면 true로 변경
+        refreshTokenCookie.setDomain("localhost");
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(24 * 60 * 60);
         response.addCookie(refreshTokenCookie);
 
-        // ResponseCode 사용하여 RsData 객체 생성 및 JSON 응답 작성
+        tokenService.saveOwnerToken(sCode, refreshToken, authentication);
+
+        //ResponseData 사용하여 RsData 객체 생성 및 JSON 응답 작성
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("isFirstLogin", customOwnerDetails.isFirstLogin());
         responseData.put("accessToken", accessToken);  // accessToken 포함
@@ -98,8 +114,6 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.getWriter().write(jsonResponse);
     }
-
-
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException {
@@ -112,4 +126,6 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.getWriter().write(jsonResponse);
     }
+
+
 }

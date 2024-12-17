@@ -25,7 +25,7 @@ import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Entity
 @Table(name = "store")
@@ -42,7 +42,7 @@ public class Store {
 
     @Column(name = "s_pw", nullable = false, length = 200)
     private String sPw;
-    
+
     @Column(name = "s_name", nullable = false, length = 200)
     private String sName;
     
@@ -63,15 +63,6 @@ public class Store {
     @Column(name = "s_phone", length = 100)
     private String sPhone;
 
-    //0: 매장이용 1: 포장만 가능
-    @Enumerated(EnumType.STRING)
-    @Column(name = "s_store_use")
-    private BooleanStatus sStoreUse;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "s_wifi")
-    private BooleanStatus sWifi;
-
     @Column(name = "ceo", length = 100)
     private String ceo;
 
@@ -91,10 +82,19 @@ public class Store {
     @Column(name = "s_park")
     private BooleanStatus sPark;
 
-    @Column(name = "directions", length = 200)
-    private String directions;
+    //0: 매장이용 1: 포장만 가능
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_store_use")
+    private BooleanStatus sStoreUse;
 
-    //0: 운영 1: 폐점
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_wifi")
+    private BooleanStatus sWifi;
+
+    @Column(name = "s_directions", length = 1000)
+    private String sDirections;
+
+    //0: 둥록요청 1: 운영중 2:폐점
     @Enumerated(EnumType.STRING)
     @Column(name = "s_status")
     private StoreStatus sStatus;
@@ -110,4 +110,26 @@ public class Store {
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
+    public void update(Store store) {
+        updateField(store.getSName(), this.sName, value -> this.sName = value);
+        updateField(store.getSAddress(), this.sAddress, value -> this.sAddress = value);
+        updateField(store.getSPhone(), this.sPhone, value -> this.sPhone = value);
+        updateField(store.getCeo(), this.ceo, value -> this.ceo = value);
+        updateField(store.getSStartEnd(), this.sStartEnd, value -> this.sStartEnd = value);
+        updateField(store.getSDriveThru(), this.sDriveThru, value -> this.sDriveThru = value);
+        updateField(store.getSPark(), this.sPark, value -> this.sPark = value);
+        updateField(store.getSStoreUse(), this.sStoreUse, value -> this.sStoreUse = value);
+        updateField(store.getSWifi(), this.sWifi, value -> this.sWifi = value);
+        updateField(store.getSDirections(), this.sDirections, value -> this.sDirections = value);
+        updateField(store.getSStatus(), this.sStatus, value -> this.sStatus = value);
+        updateField(store.getSNone(), this.sNone, value -> this.sNone = value);
+        updateField(store.getXAxis(), this.xAxis, value -> this.xAxis = value);
+        updateField(store.getYAxis(), this.yAxis, value -> this.yAxis = value);
+    }
+
+    private <T> void updateField(T newValue, T currentValue, java.util.function.Consumer<T> updater) {
+        if (newValue != null && !newValue.equals(currentValue)) {
+            updater.accept(newValue);
+        }
+    }
 }   

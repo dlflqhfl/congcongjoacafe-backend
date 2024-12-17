@@ -1,5 +1,6 @@
 package com.congcongjoa.congcongjoa.dto;
 
+import com.congcongjoa.congcongjoa.enums.ICATE;
 import lombok.Data;
 
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
@@ -11,7 +12,7 @@ public class ImageDTO {
     private Long id;
     private Long sIdx;
     private Long mnIdx;
-    private BooleanStatus iCate;
+    private ICATE iCate;
     @JsonProperty("iName")
     private String iName;
     @JsonProperty("iMain")
