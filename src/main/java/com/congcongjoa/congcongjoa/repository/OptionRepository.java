@@ -10,6 +10,8 @@ import com.congcongjoa.congcongjoa.repository.custom.OptionRepositoryCustom;
 
 public interface OptionRepository extends JpaRepository<Option, Long>, OptionRepositoryCustom {
 
+    Option findByopName(String opName);
+
     @Query("SELECT o FROM Option o WHERE o.opStatus =0")
     List<Option> findOptionAll();
     

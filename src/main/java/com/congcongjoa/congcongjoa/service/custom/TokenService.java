@@ -33,21 +33,6 @@ public class TokenService {
         return new CustomOwnerDetails(store.getSCode(), store.getSPw());
     }
 
-    @Transactional
-    public void saveOwnerToken(String sCode, String accessToken, String refreshToken, Authentication authentication) {
-        Store store = storeRepository.findBysCode(sCode);
-
-        // Store 상태를 확인하여 isFirstLogin 값 설정
-        boolean isFirstLogin = store.getSStatus() == StoreStatus.REGISTERED;
-        
-        store.updateTokens(accessToken, refreshToken);
-        storeRepository.save(store);
-
-        // CustomOwnerDetails에 isFirstLogin 값 설정
-        CustomOwnerDetails customOwnerDetails = (CustomOwnerDetails) authentication.getPrincipal();
-        customOwnerDetails.setFirstLogin(isFirstLogin);
-    }
-
     private boolean isPasswordValid(Store store, String password) {
         StoreStatus status = store.getSStatus();
 

@@ -76,8 +76,6 @@ public class OwnerLoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtProvider.getAccessToken(tokenData);
         String refreshToken = jwtProvider.getRefreshToken(tokenData);
 
-        tokenService.saveOwnerToken(sCode, accessToken, refreshToken, authentication);
-
         // 응답 설정
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");

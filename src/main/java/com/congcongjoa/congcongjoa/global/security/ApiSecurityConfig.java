@@ -22,7 +22,8 @@ public class ApiSecurityConfig {
         http
                 .securityMatcher("/api/login")
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/api/login").permitAll() // /api/login 경로에 대해 인증 없이 접근 허용
+                        .requestMatchers("/api/admin").permitAll() // /api/login 경로에 대해 인증 없이 접근 허용
+                        .requestMatchers("/admin").permitAll() // /api/login 경로에 대해 인증 없이 접근 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 )
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화

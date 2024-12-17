@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
+import com.congcongjoa.congcongjoa.mapper.StoreMapper;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
 
 import java.util.List;
@@ -58,6 +59,10 @@ public class StoreService {
 
         }
 
+    }
+
+    public List<StoreDTO> getAllStore() {
+        return StoreMapper.INSTANCE.toStoreDTOList(storeRepository.findAll());
     }
 
     // 모든 매장의 키값과 이름을 가져온다

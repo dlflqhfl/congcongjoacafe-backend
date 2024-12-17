@@ -18,7 +18,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @Entity
 @Table(name = "allergy")
 @ToString(exclude = {"menu"})

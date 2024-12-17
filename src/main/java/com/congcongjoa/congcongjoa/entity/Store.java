@@ -42,12 +42,6 @@ public class Store {
 
     @Column(name = "s_pw", nullable = false, length = 200)
     private String sPw;
-
-    @Column(name = "s_access_token", length = 1024)
-    private String sAccessToken;
-
-    @Column(name = "s_refresh_token", length = 1024)
-    private String sRefreshToken;
     
     @Column(name = "s_name", nullable = false, length = 200)
     private String sName;
@@ -66,16 +60,17 @@ public class Store {
     @Column(name = "y_axis", length = 100)
     private String yAxis;
 
-    @Column(name = "region", length = 100)
-    private String region;
-
     @Column(name = "s_phone", length = 100)
     private String sPhone;
 
     //0: 매장이용 1: 포장만 가능
     @Enumerated(EnumType.STRING)
-    @Column(name = "to_go")
-    private BooleanStatus toGo;
+    @Column(name = "s_store_use")
+    private BooleanStatus sStoreUse;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_wifi")
+    private BooleanStatus sWifi;
 
     @Column(name = "ceo", length = 100)
     private String ceo;
@@ -86,6 +81,10 @@ public class Store {
             @AttributeOverride(name = "end", column = @Column(name = "s_end"))
     })
     private StartEndVo sStartEnd;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "s_drive_thru")
+    private BooleanStatus sDriveThru;
 
     //0: 주차가능 1: 주차불가
     @Enumerated(EnumType.STRING)
@@ -110,13 +109,5 @@ public class Store {
     @Builder.Default
     @OneToMany(mappedBy = "store" , fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
-
-    public void updateTokens(String accessToken, String refreshToken) {
-        if (accessToken == null || refreshToken == null) {
-            throw new IllegalArgumentException("엑세스 토큰, 리프레시 토큰 값이 null입니다");
-        }
-        this.sAccessToken = accessToken;
-        this.sRefreshToken = refreshToken;
-    }
 
 }   
