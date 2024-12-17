@@ -120,6 +120,8 @@ public class StoreService {
                 .build();
     }
 
-
-
+    // sName을 통해 id반환
+    public Long getsIdBySName(String sName) {
+        return storeRepository.findIdBySName(sName);
+    }
 }

@@ -14,11 +14,11 @@ public interface PaymentMapper {
 
     PaymentMapper INSTANCE = Mappers.getMapper(PaymentMapper.class);
 
-    @Mapping(source = "order.id", target = "orIdx")
+    @Mapping(source = "orders.id", target = "orIdx")
     @Mapping(source = "member.id", target = "MIdx")
     PaymentDTO toPaymentDTO(Payment payment);
 
-    @Mapping(source = "orIdx", target = "order.id")
+    @Mapping(source = "orIdx", target = "orders.id")
     @Mapping(source = "MIdx", target = "member.id")
     Payment toPayment(PaymentDTO paymentDTO);
 

@@ -20,7 +20,6 @@ public class PublicOwnerController {
     @GetMapping("/stores")
     @Operation(summary = "지점 조회", description = "모든 지점의 키값, 지점명을 반환합니다.")
     public RsData<List<StoreDTO>> getStores() {
-        System.out.println("하이");
         try {
             List<StoreDTO> stores = storeService.findIdAndSName();
             return ResponseCode.OK.toRsData(stores);
@@ -28,5 +27,4 @@ public class PublicOwnerController {
             return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(null);
         }
     }
-
 }

@@ -26,8 +26,8 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "orders")
-@ToString(exclude = {"orderDetails", "payments", "member"})
-public class Order {
+@ToString(exclude = {"orderDetails", "payments", "member", "store"})
+public class Orders {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +37,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "m_idx", referencedColumnName = "m_idx")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "s_idx", referencedColumnName = "s_idx")
+    private Store store;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "or_status")
@@ -49,11 +53,11 @@ public class Order {
     private String orNone;
 
     @Builder.Default
-    @OneToMany(mappedBy = "order" , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "order" , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orders", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 
 }

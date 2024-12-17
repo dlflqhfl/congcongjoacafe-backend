@@ -24,7 +24,6 @@ public class UserController {
 
     @RequestMapping("/register/duplicate")
     public ResponseEntity<Boolean> register_duplicate(@RequestParam(required = false) String email) {
-        System.out.println("여기 왔음");
         System.out.println("email: "+email);
         boolean isDuplicate = ms.isEmailDuplicate(email);
         return ResponseEntity.ok(isDuplicate);
