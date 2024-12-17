@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
-
 public interface StoreRepository extends JpaRepository<Store, Long>, StoreRepositoryCustom {
     @Query("SELECT s FROM Store s WHERE s.sName = :sName AND s.sCode = :sCode")
     Store findBySNameAndSCode(@Param("sName") String sName, @Param("sCode") String sCode);
@@ -15,4 +13,7 @@ public interface StoreRepository extends JpaRepository<Store, Long>, StoreReposi
     Store findBysCode(String sCode);
 
     Store findBysName(String sName);
+
+    @Query("SELECT s.id FROM Store s WHERE s.sName = :sName")
+    Long findIdBySName(String sName);
 }

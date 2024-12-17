@@ -14,11 +14,11 @@ public interface OrderDetailMapper {
 
     OrderDetailMapper INSTANCE = Mappers.getMapper(OrderDetailMapper.class);
 
-    @Mapping(source = "order.id", target = "orIdx")
+    @Mapping(source = "orders.id", target = "orIdx")
     @Mapping(source = "storeMenu.id", target = "smIdx")
     OrderDetailDTO toOrderDetailDTO(OrderDetail orderDetail);
 
-    @Mapping(source = "orIdx", target = "order.id")
+    @Mapping(source = "orIdx", target = "orders.id")
     @Mapping(source = "smIdx", target = "storeMenu.id")
     OrderDetail toOrderDetail(OrderDetailDTO orderDetailDTO);
 

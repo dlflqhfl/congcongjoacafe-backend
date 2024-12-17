@@ -1,8 +1,10 @@
 package com.congcongjoa.congcongjoa.controller;
 import com.congcongjoa.congcongjoa.RsData.RsData;
 import com.congcongjoa.congcongjoa.dto.StoreDTO;
+import com.congcongjoa.congcongjoa.dto.custom.OwnerDashboardStatsDTO;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
+import com.congcongjoa.congcongjoa.service.OrderService;
 import com.congcongjoa.congcongjoa.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class OwnerController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private AwsS3Service awsS3Service;
@@ -59,9 +64,22 @@ public class OwnerController {
         }
     }
 
-    @GetMapping("/stats")
-    @Operation(summary = "불러오기")
-    public RsData<String> getStats() {
-        return ResponseCode.OK.toRsData("success");
+    @GetMapping("/dashboard/stats")
+    @Operation(summary = "점주 각종 정보들 불러오기", description = "")
+    public RsData<String> getStats(String sName) {
+        OwnerDashboardStatsDTO ownerDashboardStatsDTO = new OwnerDashboardStatsDTO();
+
+        Long sIdx = storeService.getsIdBySName(sName);
+
+        // 실시간 오늘 주문 수
+        ownerDashboardStatsDTO.setOrders(orderService.getTodayOrder(sIdx));
+
+        // 실시간 오늘 매출
+        ownerDashboardStatsDTO.setRevenue(orderService.getTodayRevenue(sIdx));
+
+        // 실시간 오늘 제일 많이 팔린 메뉴
+        ownerDashboardStatsDTO.setMenu(orderService.getTodayMenus(sIdx));
+
+        return null;
     }
 }
