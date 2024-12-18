@@ -22,8 +22,10 @@ import com.congcongjoa.congcongjoa.dto.StoreDTO;
 import com.congcongjoa.congcongjoa.dto.custom.MemberListDTO;
 import com.congcongjoa.congcongjoa.dto.custom.RegMenuOptionDTO;
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
+import com.congcongjoa.congcongjoa.dto.custom.ResetPasswordStoreDTO;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
+import com.congcongjoa.congcongjoa.service.EmailService;
 import com.congcongjoa.congcongjoa.service.MemberService;
 import com.congcongjoa.congcongjoa.service.MenuOptionService;
 import com.congcongjoa.congcongjoa.service.MenuService;
@@ -42,6 +44,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private StoreService storeService;
@@ -103,11 +108,17 @@ public class AdminController {
         boolean result = storeService.regStore(regStoreDTO);
 
         if (result) {
+            try {
+                emailService.sendRegEmail(regStoreDTO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return ResponseCode.OK.toRsData(null);
         } else {
             return ResponseCode.USER_ALREADY_EXIST.toRsData(null);
         }
     }
+
 
     @GetMapping("/storeList")
     public RsData<List<StoreDTO>> getstoreList() {
@@ -308,6 +319,26 @@ public class AdminController {
         List<MemberListDTO> memberListDTO = memberService.getMemberList();
 
         return ResponseCode.OK.toRsData(memberListDTO);
+    }
+
+    @PostMapping("/resetPassword")
+    public RsData<String> resetPassword(@RequestBody ResetPasswordStoreDTO resetPasswordStoreDTO) {
+        
+        String password = "";
+        //이메일로 변경된 비밀번호 발송
+        try {
+            password = emailService.sendEmail(resetPasswordStoreDTO.getEmail());  
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
+        boolean result = storeService.resetPassword(resetPasswordStoreDTO.getStoreId(), password);
+
+        if (result) {
+            return ResponseCode.OK.toRsData(null);
+        } else {
+            return ResponseCode.USER_ALREADY_EXIST.toRsData(null);
+        }
     }
     
 }

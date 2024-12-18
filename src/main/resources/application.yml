@@ -45,6 +45,21 @@ spring:
     cache: false
     enums:
       use-class-for-enum-values: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          encoding: UTF-8
+    auth-code-expiration-millis: 180000
 
 cloud:
   aws:
@@ -54,7 +69,6 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-
 custom:
   jwt:
     secretKey: jasdaasdlnwlernlxchopASjfdwaswooseokdf1d65s4d6g4a6sd4fsdahnthjpower
