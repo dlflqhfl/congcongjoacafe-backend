@@ -41,6 +41,21 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         return calculateRevenue(id, 1);
     }
 
+    @Override
+    public String getTodayBestSellingMenu(Long id) {
+
+        return queryFactory.select(orderDetail.odName)
+                .from(orderDetail)
+                .join(orderDetail.orders, orders)
+                .where(orders.orDate.between(START_OF_DAY, END_OF_DAY)
+                        .and(orders.store.id.eq(id)
+                                .and(orders.orStatus.eq(OrderStatus.COMPLETE))))
+                .groupBy(orderDetail.odName)
+                .orderBy(orderDetail.odTotal.sum().desc())
+                .limit(1)
+                .fetchOne();
+    }
+
     private Long countOrdersByStatus(Long id, OrderStatus status, boolean isEqual) {
         return queryFactory.select(orders.count())
                 .from(orders)

@@ -8,4 +8,6 @@ public interface OrderRepositoryCustom {
     Long getTodayRevenue(Long id);
 
     Long getYesterdayRevenue(Long id);
+
+    String getTodayBestSellingMenu(Long id);
 }
