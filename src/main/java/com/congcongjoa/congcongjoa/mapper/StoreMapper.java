@@ -29,8 +29,8 @@ public interface StoreMapper {
     @Mapping(source = "SWifi", target =  "SWifi")
     @Mapping(source = "SStatus", target =  "SStatus")
     @Mapping(source = "SNone", target =  "SNone")
+    @Mapping(source = "images", target = "images")
     @Mapping(target = "storeMenus", ignore = true)
-    @Mapping(target = "images", ignore = true)
     StoreDTO toStoreDTO(Store store);
 
     @Mapping(source = "directions", target = "sDirections")
@@ -48,8 +48,8 @@ public interface StoreMapper {
     @Mapping(source = "SWifi", target =  "sWifi")
     @Mapping(source = "SStatus", target =  "sStatus")
     @Mapping(source = "SNone", target =  "sNone")
+    @Mapping(source = "images", target = "images")
     @Mapping(target = "storeMenus", ignore = true)
-    @Mapping(target = "images", ignore = true)
     Store toStore(StoreDTO storeDTO);
 
     List<StoreDTO> toStoreDTOList(List<Store> storeList);
