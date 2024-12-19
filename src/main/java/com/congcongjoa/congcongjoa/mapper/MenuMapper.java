@@ -6,8 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import com.congcongjoa.congcongjoa.dto.AllergyDTO;
 import com.congcongjoa.congcongjoa.dto.MenuDTO;
+import com.congcongjoa.congcongjoa.dto.NutritionDTO;
+import com.congcongjoa.congcongjoa.entity.Allergy;
 import com.congcongjoa.congcongjoa.entity.Menu;
+import com.congcongjoa.congcongjoa.entity.Nutrition;
 
 @Mapper
 public interface MenuMapper {
@@ -31,5 +35,5 @@ public interface MenuMapper {
     List<MenuDTO> toMenuDTOList(List<Menu> menuList);
 
     List<Menu> toMenuList(List<MenuDTO> menuDTOList);
-    
+
 }

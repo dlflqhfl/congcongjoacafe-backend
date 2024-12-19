@@ -6,7 +6,6 @@ import java.util.List;
 import com.congcongjoa.congcongjoa.enums.BooleanStatus;
 import com.congcongjoa.congcongjoa.enums.MenuCate;
 import com.congcongjoa.congcongjoa.enums.Size;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +22,7 @@ import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Entity
 @Table(name = "menu")

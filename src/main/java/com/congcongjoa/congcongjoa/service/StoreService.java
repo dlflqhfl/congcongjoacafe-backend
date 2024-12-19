@@ -9,6 +9,7 @@ import com.congcongjoa.congcongjoa.mapper.StoreMapper;
 import com.congcongjoa.congcongjoa.repository.ImageRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.congcongjoa.congcongjoa.dto.custom.RegStoreDTO;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
@@ -25,6 +26,9 @@ public class StoreService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
 
     public boolean checkStoreName(String storeName) {
@@ -58,7 +62,7 @@ public class StoreService {
             Store store = Store.builder()
                 .sCode(regStoreDTO.getStoreCode())
                 .sName(regStoreDTO.getName())
-                .sPw(regStoreDTO.getInitialPassword())
+                .sPw(passwordEncoder.encode(regStoreDTO.getInitialPassword()))
                 .sStatus(StoreStatus.REGISTERED)
                 .build();
     
@@ -73,6 +77,11 @@ public class StoreService {
         }
     }
 
+    public List<StoreDTO> getAllStore() {
+        return StoreMapper.INSTANCE.toStoreDTOList(storeRepository.findAll());
+    }
+
+    // 모든 매장의 키값과 이름을 가져온다
     @Transactional
     public boolean registerStoreWithImages(List<String> uploadedFileNames, Integer mainImageIndex, StoreDTO storeDTO) {
         try {
@@ -117,5 +126,23 @@ public class StoreService {
     // sName을 통해 id반환
     public Long getsIdBySName(String sName) {
         return storeRepository.findIdBySName(sName);
+    }
+
+    public boolean resetPassword(Long storeId, String password) {
+        try {
+            Store store = storeRepository.findById(storeId).get();
+
+            Store resetPassStore = store.toBuilder()
+                    .sPw(passwordEncoder.encode(password))
+                    .build();
+            
+            storeRepository.save(resetPassStore);
+
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("Error checking store code: " + e.getMessage());
+            return false;
+        }
     }
 }
