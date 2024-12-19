@@ -23,5 +23,4 @@ public interface NutritionMapper {
     List<NutritionDTO> toNutritionDTOList(List<Nutrition> nutritionList);
 
     List<Nutrition> toNutritionList(List<NutritionDTO> nutritionDTOList);
-    
 }

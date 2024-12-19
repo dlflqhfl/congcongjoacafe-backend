@@ -4,11 +4,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Data
 public class OwnerDashboardStatsDTO {
     private OrdersDTO orders;
     private RevenueDTO revenue;
-    private MenuDTO menu;
+    private List<MenuDTO> menuDTOList;
     private CustomersDTO customers;
 
     //오늘의 주문

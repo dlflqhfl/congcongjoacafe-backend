@@ -5,6 +5,7 @@ import com.congcongjoa.congcongjoa.dto.custom.OwnerDashboardStatsDTO;
 import com.congcongjoa.congcongjoa.enums.ResponseCode;
 import com.congcongjoa.congcongjoa.service.AwsS3Service;
 import com.congcongjoa.congcongjoa.service.OrderService;
+import com.congcongjoa.congcongjoa.service.StoreMenuService;
 import com.congcongjoa.congcongjoa.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class OwnerController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private StoreMenuService storeMenuService;
 
     @Autowired
     private AwsS3Service awsS3Service;
@@ -65,21 +69,45 @@ public class OwnerController {
     }
 
     @GetMapping("/dashboard/stats")
-    @Operation(summary = "점주 각종 정보들 불러오기", description = "")
-    public RsData<String> getStats(String sName) {
-        OwnerDashboardStatsDTO ownerDashboardStatsDTO = new OwnerDashboardStatsDTO();
+    @Operation(summary = "점주 메인 대쉬보드 스텟 불러오기", description = "sName을 통해 실시간 주문, 실시간 매출, 오늘의 메뉴를 가져온다 ")
+    public RsData<OwnerDashboardStatsDTO> getStats(@RequestParam String sName) {
+        try {
+            OwnerDashboardStatsDTO ownerDashboardStatsDTO = new OwnerDashboardStatsDTO();
 
-        Long sIdx = storeService.getsIdBySName(sName);
+            Long sIdx = storeService.getsIdBySName(sName);
 
-        // 실시간 오늘 주문 수
-        ownerDashboardStatsDTO.setOrders(orderService.getTodayOrder(sIdx));
+            if (sIdx == null) {
+                return ResponseCode.USER_NOT_FOUND.toRsData(null);
+            }
+            // 실시간 오늘 주문 수
+            ownerDashboardStatsDTO.setOrders(orderService.getTodayOrder(sIdx));
 
-        // 실시간 오늘 매출
-        ownerDashboardStatsDTO.setRevenue(orderService.getTodayRevenue(sIdx));
+            // 실시간 오늘 매출
+            ownerDashboardStatsDTO.setRevenue(orderService.getTodayRevenue(sIdx));
 
-        // 실시간 오늘 제일 많이 팔린 메뉴
-        ownerDashboardStatsDTO.setMenu(orderService.getTodayMenus(sIdx));
+            // 실시간 오늘 제일 많이 팔린 메뉴
+            ownerDashboardStatsDTO.setMenuDTOList(orderService.getTodayMenus(sIdx));
 
-        return null;
+            return ResponseCode.OK.toRsData(ownerDashboardStatsDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(null);
+        }
     }
+
+@GetMapping("/menus")
+@Operation(summary = "")
+public RsData<List<StoreDTO>> getMenus(@RequestParam String sName) {
+    try {
+        System.out.println(sName + " sName");
+        if (sName == null || sName.isEmpty()) {
+        List<StoreDTO> storeDTOList = storeMenuService.getStoreList(sName);
+            return ResponseCode.OK.toRsData(storeDTOList);
+        }
+        return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(null);
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+        return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(null);
+    }
+}
 }

@@ -1,12 +1,18 @@
 package com.congcongjoa.congcongjoa.service;
 
 import com.congcongjoa.congcongjoa.dto.custom.OwnerDashboardStatsDTO;
+import com.congcongjoa.congcongjoa.entity.OrderDetail;
+import com.congcongjoa.congcongjoa.entity.QOrderDetail;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.congcongjoa.congcongjoa.repository.OrderRepository;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.congcongjoa.congcongjoa.entity.QOrderDetail.orderDetail;
 
 @Service
 public class OrderService {
@@ -25,7 +31,7 @@ public class OrderService {
             ordersDTO.setCount(Long.valueOf(totalCount != null ? totalCount.intValue() : null)); // null-safe
 
             // 대기 중 주문 개수 조회
-            Long waitingCount = orderRepository.waitingCount(id);
+            Long waitingCount = orderRepository.getWaitingCount(id);
             ordersDTO.setPending(Long.valueOf(waitingCount != null ? waitingCount.intValue() : null)); // null-safe
 
             return ordersDTO;
@@ -63,11 +69,27 @@ public class OrderService {
         }
     }
 
-    public OwnerDashboardStatsDTO.MenuDTO getTodayMenus(Long id) {
+    public List<OwnerDashboardStatsDTO.MenuDTO> getTodayMenus(Long id) {
+        try {
+            List<OwnerDashboardStatsDTO.MenuDTO> menuDTOList = new ArrayList<OwnerDashboardStatsDTO.MenuDTO>();
 
+            List< Tuple> menuList  = orderRepository.getTodayBestSellingMenu(id);
 
+            if(menuList != null && menuList.size() > 0) {
+                menuList.forEach(tuple -> {
+                    OwnerDashboardStatsDTO.MenuDTO menuDTO = new OwnerDashboardStatsDTO.MenuDTO();
+                    menuDTO.setName(tuple.get(orderDetail.odName));
+                    menuDTO.setSales(tuple.get(orderDetail.count()));
+                    menuDTO.setRevenue(tuple.get(orderDetail.odPrice));
+                    menuDTOList.add(menuDTO);
+                });
+            }
 
-
-        return null;
+            return menuDTOList;
+        }catch (Exception e){
+            System.err.println("Error calculating today's menus: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }

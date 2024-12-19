@@ -2,6 +2,7 @@ package com.congcongjoa.congcongjoa.repository.custom.impl;
 
 import com.congcongjoa.congcongjoa.enums.OrderStatus;
 import com.congcongjoa.congcongjoa.repository.custom.OrderRepositoryCustom;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import static com.congcongjoa.congcongjoa.entity.QOrderDetail.orderDetail;
@@ -9,6 +10,7 @@ import static com.congcongjoa.congcongjoa.entity.QOrders.orders;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
@@ -27,7 +29,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
 
     @Override
-    public Long waitingCount(Long id) {
+    public Long getWaitingCount(Long id) {
         return countOrdersByStatus(id, OrderStatus.NOTORDER, true);
     }
 
@@ -42,9 +44,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
 
     @Override
-    public String getTodayBestSellingMenu(Long id) {
+    public List<Tuple> getTodayBestSellingMenu(Long id) {
 
-        return queryFactory.select(orderDetail.odName)
+
+        return queryFactory.select(orderDetail.odName, orderDetail.count(), orderDetail.odTotal.sum())
                 .from(orderDetail)
                 .join(orderDetail.orders, orders)
                 .where(orders.orDate.between(START_OF_DAY, END_OF_DAY)
@@ -52,8 +55,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                                 .and(orders.orStatus.eq(OrderStatus.COMPLETE))))
                 .groupBy(orderDetail.odName)
                 .orderBy(orderDetail.odTotal.sum().desc())
-                .limit(1)
-                .fetchOne();
+                .limit(3)
+                .fetch();
     }
 
     private Long countOrdersByStatus(Long id, OrderStatus status, boolean isEqual) {
