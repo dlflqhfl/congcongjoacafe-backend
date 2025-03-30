@@ -12,6 +12,7 @@ import com.congcongjoa.congcongjoa.enums.OrderStatus;
 public class OrderDTO {
 
     private Long id;
+    private Long sIdx;
     private Long mIdx;
     private OrderStatus orStatus;
     private LocalDateTime orDate;

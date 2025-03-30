@@ -15,6 +15,7 @@ public interface OrderMapper {
     OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
 
     @Mapping(source = "member.id", target = "MIdx")
+    @Mapping(source = "store.id", target = "SIdx")
     @Mapping(target = "orderDetails", ignore = true)
     @Mapping(target = "payments", ignore = true)
     OrderDTO toOrderDTO(Orders orders);

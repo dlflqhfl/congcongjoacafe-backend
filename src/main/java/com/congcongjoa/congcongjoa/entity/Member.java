@@ -44,16 +44,16 @@ public class Member {
     @JoinColumn(name = "g_idx", referencedColumnName = "g_idx")
     private Grade grade;
 
-    @Column(name = "m_name", nullable = false, length = 200)
+    @Column(name = "m_name", length = 200)
     private String mName;
 
-    @Column(name = "m_email", nullable = false, length = 200)
+    @Column(name = "m_email", length = 200)
     private String mEmail;
 
     @Column(name = "m_pw", nullable = false, length = 200)
     private String mPw;
 
-    @Column(name = "m_birth", nullable = false, length = 200)
+    @Column(name = "m_birth", length = 200)
     private LocalDateTime mBirth;
 
     @Enumerated(EnumType.STRING)
@@ -70,27 +70,21 @@ public class Member {
 
     @Column(name = "m_phone", length = 100)
     private String mPhone;
-    
-    @Column(name = "m_access_token", length = 1024)
-    private String mAccessToken;
-
-    @Column(name = "m_refresh_token", length = 1024)
-    private String mRefreshToken;
 
     // 0: 이메일 1: 카카오 2: 네이버 3: 구글
     @Enumerated(EnumType.STRING)
-    @Column(name = "m_social", nullable = false)
+    @Column(name = "m_social")
     private Social mSocial;
     
-    @Column(name = "m_date", nullable = false, updatable = false)
+    @Column(name = "m_date", updatable = false)
     private LocalDateTime mDate;
 
-    //0: 동의 1: 비동의
+    //트루: 동의 펄스: 비동의
     @Enumerated(EnumType.STRING)
-    @Column(name = "m_email_check", nullable = false)
+    @Column(name = "m_email_check")
     private BooleanStatus mEmailCheck;
 
-    //0: 가입 1: 탈퇴
+    //트루: 가입 펄스: 탈퇴
     @Enumerated(EnumType.STRING)
     @Column(name = "m_status", nullable = false)
     private BooleanStatus mStatus;

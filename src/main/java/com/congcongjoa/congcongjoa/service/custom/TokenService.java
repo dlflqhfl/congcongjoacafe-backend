@@ -1,10 +1,13 @@
 package com.congcongjoa.congcongjoa.service.custom;
 
 import com.congcongjoa.congcongjoa.dto.custom.CustomOwnerDetails;
+import com.congcongjoa.congcongjoa.dto.custom.CustomUserAdminDetails;
+import com.congcongjoa.congcongjoa.entity.Member;
 import com.congcongjoa.congcongjoa.entity.redis.RefreshToken;
 import com.congcongjoa.congcongjoa.entity.Store;
 import com.congcongjoa.congcongjoa.enums.StoreStatus;
 import com.congcongjoa.congcongjoa.jwt.JwtProvider;
+import com.congcongjoa.congcongjoa.repository.MemberRepository;
 import com.congcongjoa.congcongjoa.repository.RefreshTokenRepository;
 import com.congcongjoa.congcongjoa.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class TokenService {
+public class TokenService{
 
     @Autowired
     private StoreRepository storeRepository;
@@ -36,12 +39,15 @@ public class TokenService {
     @Autowired
     private JwtProvider jwtProvider;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
 
     //owner jwt로그인 인증
-    public UserDetails findUserBySNameAndPasswordAndSCode(String sName, String password, String sCode) {
+    public UserDetails authenticateOwner(String sName, String password, String sCode) {
         Store store = storeRepository.findBySNameAndSCode(sName, sCode);
 
-        if (store == null || !isPasswordValid(store, password)) {
+        if (store == null || isPasswordValid(store, password)) {
             return null;
         }
 
@@ -71,18 +77,6 @@ public class TokenService {
     // TokenService에서 해당 토큰 무효화 로직
     public void invalidateToken(String token) {
         redisTemplate.opsForSet().add("blacklisted_tokens", token);
-    }
-
-    private boolean isPasswordValid(Store store, String password) {
-        String passwordEncode = store.getSNone();
-
-        if (passwordEncode == null) {
-            return store.getSPw().equals(password);
-        } else if (!passwordEncode.isEmpty()) {
-            return passwordEncoder.matches(password, store.getSPw());
-        } else {
-            return false;
-        }
     }
 
     public boolean isTokenBlacklisted(String token) {
@@ -115,5 +109,44 @@ public class TokenService {
         }
 
         return jwtProvider.getAccessToken(tokenData);
+    }
+
+    public UserDetails authenticateUserAdmin(String username, String password, String role) {
+
+        Member member = memberRepository.findByUserName(username, role);
+
+        if (member == null || isPasswordValid(member, password)) {
+            return null;
+        }
+
+        return new CustomUserAdminDetails(member.getMEmail(), member.getMPw(), role);
+    }
+
+
+    // 공통 패스워드 검증 로직
+    private boolean isPasswordValid(Object credentialHolder, String password) {
+        String passwordEncode;
+
+        if (credentialHolder instanceof Store store) { // Store일 경우 처리
+            passwordEncode = store.getSNone();
+            if (passwordEncode == null) {
+                return !store.getSPw().equals(password);
+            } else if (!passwordEncode.isEmpty()) {
+                return !passwordEncoder.matches(password, store.getSPw());
+            }
+        } else if (credentialHolder instanceof Member member) {
+            return !passwordEncoder.matches(password, member.getMPw());
+        }
+
+        return true;
+    }
+
+    public void saveAdminUserToken(String username, String refreshToken) {
+
+        RefreshToken redis = new RefreshToken(refreshToken, username);
+
+
+        refreshTokenRepository.save(redis);
+
     }
 }

@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.congcongjoa.congcongjoa.service.MemberService;
 
 @Controller
-@RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/user")
 public class UserController {
 
-    @Autowired
-    MemberService ms;
+    private final MemberService ms;
+
+    public UserController(MemberService ms) {
+        this.ms = ms;
+    }
 
     @RequestMapping("/test")
     public void requestMethodName(@RequestParam("param") String param) {
@@ -28,6 +30,5 @@ public class UserController {
         boolean isDuplicate = ms.isEmailDuplicate(email);
         return ResponseEntity.ok(isDuplicate);
     }
-    
-    
+
 }

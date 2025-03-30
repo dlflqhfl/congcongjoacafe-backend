@@ -21,7 +21,7 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "order_detail")
-@ToString(exclude = {"order", "storeMenu"})
+@ToString(exclude = {"orders", "storeMenu"})
 public class OrderDetail {
     
     @Id

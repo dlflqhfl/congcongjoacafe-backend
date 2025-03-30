@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/api/public/owner")
 public class PublicOwnerController {
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
+
+    public PublicOwnerController(StoreService storeService) {
+        this.storeService = storeService;
+    }
 
     @GetMapping("/stores")
     @Operation(summary = "지점 조회", description = "모든 지점의 키값, 지점명을 반환합니다.")

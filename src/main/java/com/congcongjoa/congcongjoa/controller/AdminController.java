@@ -42,38 +42,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("api/admin")
 public class AdminController {
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
 
-    @Autowired
-    private OptionService optionService;
+    private final OptionService optionService;
 
-    @Autowired
-    private MenuOptionService menuOptionService;
+    private final MenuOptionService menuOptionService;
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    private AwsS3Service awsS3Service;
+    private final AwsS3Service awsS3Service;
+
+    public AdminController(EmailService emailService, StoreService storeService, MenuService menuService, OptionService optionService, MenuOptionService menuOptionService, MemberService memberService, AwsS3Service awsS3Service) {
+        this.emailService = emailService;
+        this.storeService = storeService;
+        this.menuService = menuService;
+        this.optionService = optionService;
+        this.menuOptionService = menuOptionService;
+        this.memberService = memberService;
+        this.awsS3Service = awsS3Service;
+    }
 
     @GetMapping("/checkStoreName")
     public RsData<String> checkStoreName(@RequestParam String storeName) {
 
-        System.out.println("storeCode:"+storeName);
-        
         boolean result = storeService.checkStoreName(storeName);
-
-        System.out.println("result:"+result);
 
         if (result) {
             System.out.println("성공");
@@ -86,12 +85,8 @@ public class AdminController {
 
     @GetMapping("/checkStoreCode")
     public RsData<String> checkStoreCode(@RequestParam String storeCode) {
-
-        System.out.println("storeCode:"+storeCode);
         
         boolean result = storeService.checkStoreCode(storeCode);
-
-        System.out.println("result:"+result);
 
         if (result) {
             System.out.println("성공");
@@ -168,6 +163,8 @@ public class AdminController {
 
     @GetMapping("/menuList")
     public RsData<List<MenuDTO>> getMenuList() {
+
+        System.out.println("메뉴 리스트");
 
         List<MenuDTO> menuDTO = menuService.getAllMenu();
 
@@ -260,6 +257,7 @@ public class AdminController {
 
     @GetMapping("/optionList")
     public RsData<List<OptionDTO>> getOptionList() {
+        System.out.println("옵션리스트 들어옴");
 
         List<OptionDTO> optionDTO = optionService.getAllOption();
 

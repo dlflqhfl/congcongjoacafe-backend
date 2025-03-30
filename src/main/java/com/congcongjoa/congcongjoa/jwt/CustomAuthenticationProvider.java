@@ -22,7 +22,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
         String sName = ((CustomAuthenticationToken) authentication).getSName();
 
-        UserDetails user = tokenService.findUserBySNameAndPasswordAndSCode(sName, password, sCode);
+        UserDetails user = tokenService.authenticateOwner(sName, password, sCode);
 
         // null 체크 추가
         if (user == null) {

@@ -14,7 +14,7 @@ public class StoreMenuService {
     @Autowired
     private StoreMenuRepository storeMenuRepository;
 
-    public List<StoreDTO> getStoreList(String sName) {
+    public List<StoreDTO> getStoreMenuList(Long sIdx) {
 
         return null;
     }

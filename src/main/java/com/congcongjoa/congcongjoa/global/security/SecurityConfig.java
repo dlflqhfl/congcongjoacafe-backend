@@ -1,8 +1,8 @@
 package com.congcongjoa.congcongjoa.global.security;
 
 import com.congcongjoa.congcongjoa.jwt.JwtProvider;
+import com.congcongjoa.congcongjoa.jwt.filter.AdminUserLoginFilter;
 import com.congcongjoa.congcongjoa.jwt.filter.JwtAuthorizationFilter;
-import com.congcongjoa.congcongjoa.jwt.filter.LoginFilter;
 import com.congcongjoa.congcongjoa.jwt.filter.OwnerLoginFilter;
 import com.congcongjoa.congcongjoa.service.custom.TokenService;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +41,11 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        AdminUserLoginFilter adminLoginFilter = new AdminUserLoginFilter(tokenService, jwtProvider);
+        AdminUserLoginFilter userLoginFilter = new AdminUserLoginFilter(tokenService, jwtProvider);
+        adminLoginFilter.setFilterProcessesUrl("/api/public/admin/login");
+        userLoginFilter.setFilterProcessesUrl("/api/public/user/login");
+
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -60,7 +65,8 @@ public class SecurityConfig {
         // 필터 추가
         http
                 .addFilterBefore(new JwtAuthorizationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(adminLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(userLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(new OwnerLoginFilter(authenticationManager(authenticationConfiguration), jwtProvider, tokenService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -23,7 +23,7 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "payment")
-@ToString(exclude = {"order", "member"})
+@ToString(exclude = {"orders", "member"})
 public class Payment {
 
     @Id

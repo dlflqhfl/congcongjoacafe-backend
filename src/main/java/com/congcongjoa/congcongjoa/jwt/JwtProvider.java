@@ -116,12 +116,13 @@ public class JwtProvider {
             role = role.replace("ROLE_", "");
 
 
-            if ("OWNER".equals(role)) {
-                return claims.get("sCode", String.class);
-            } else if ("ADMIN".equals(role)) {
-                return claims.get("id", String.class);
-            } else if ("USER".equals(role)) {
-                return claims.get("email", String.class);
+            switch (role) {
+                case "OWNER" -> {
+                    return claims.get("sCode", String.class);
+                }
+                case "ADMIN", "USER" -> {
+                    return claims.get("username", String.class);
+                }
             }
         } catch (JwtException e) {
             // 예외 처리

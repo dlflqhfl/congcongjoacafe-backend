@@ -70,4 +70,7 @@ cloud:
       auto: false
 custom:
   jwt:
-    secretKey: jasdaasdlnwlernlxchopASjfdwaswooseokdf1d65s4d6g4a6sd4fsdahnthjpower
+    secretKey: jasdaasdlnwlernlxchopASjfdwaswooseokdf1d65s4d6g4a6sd4fsdahnthjpowerevel
+logging:
+  level:
+    org.springframework.security.web.FilterChainProxy: DEBUG

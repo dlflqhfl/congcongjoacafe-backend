@@ -17,11 +17,11 @@ import java.util.Map;
 @RequestMapping("/api")
 public class JwtController {
 
-    @Autowired
-    TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    JwtProvider jwtProvider;
+    public JwtController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @PostMapping("/auth/refresh-token")
     @Operation(summary = "엑세스 토큰 요청", description = "refresh token을 사용해 새로운 access token을 요청")

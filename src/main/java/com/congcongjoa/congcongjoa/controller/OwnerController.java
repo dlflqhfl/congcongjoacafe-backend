@@ -18,17 +18,20 @@ import java.util.List;
 @RequestMapping("api/owner")
 public class OwnerController {
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @Autowired
-    private StoreMenuService storeMenuService;
+    private final StoreMenuService storeMenuService;
 
-    @Autowired
-    private AwsS3Service awsS3Service;
+    private final AwsS3Service awsS3Service;
+
+    public OwnerController(StoreService storeService, OrderService orderService, StoreMenuService storeMenuService, AwsS3Service awsS3Service) {
+        this.storeService = storeService;
+        this.orderService = orderService;
+        this.storeMenuService = storeMenuService;
+        this.awsS3Service = awsS3Service;
+    }
 
     @PostMapping("/register")
     @Operation(summary = "매점 등록", description = "스토어 정보 이미지를 리엑트 서버로 부터 받아와 매점 정보와 이미지 등록")
@@ -100,8 +103,14 @@ public class OwnerController {
 public RsData<List<StoreDTO>> getMenus(@RequestParam String sName) {
     try {
         System.out.println(sName + " sName");
+
+        Long sIdx = storeService.getsIdBySName(sName);
+
         if (sName == null || sName.isEmpty()) {
-        List<StoreDTO> storeDTOList = storeMenuService.getStoreList(sName);
+
+        List<StoreDTO> storeDTOList = storeMenuService.getStoreMenuList(sIdx);
+
+
             return ResponseCode.OK.toRsData(storeDTOList);
         }
         return ResponseCode.INTERNAL_SERVER_ERROR.toRsData(null);
